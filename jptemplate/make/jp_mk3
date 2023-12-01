@@ -1,0 +1,8 @@
+# Makefile: A standard Makefile for table_graus.c
+LDFLAGS= -lm
+all
+: table_graus
+clean:
+/bin/rm -rf table_graus table_graus.o
+# END OF FILE
+

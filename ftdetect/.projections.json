@@ -1,0 +1,17 @@
+{
+  "./.projections.json": { "type": "dit" },
+
+  "README.md": {
+    "type": "doc"
+  },
+
+  "*.vim": {
+    "type": "vim",
+    "skeleton": "ftdetect"
+  },
+
+  "*.lua": {
+    "type": "lua",
+    "skeleton": "ftdetect"
+  }
+}

@@ -1,0 +1,9 @@
+# revcat -- output a file from bottom to top
+
+[ $# -eq 0 ] && echo "Usage: revcat <file [...]>" >&2 && exit 1
+
+for file in $@ ; do
+    sed -n '1!G;h;$p' "$file"
+done
+
+# EOF

@@ -1,0 +1,16 @@
+# owner -- get the owner of a file/directory
+
+function usage() {
+    echo "Usage: owner <PATH ...>" >&2
+    exit 1
+}
+
+for argv in $@ ; do
+    [ ! -e "$argv" ] && echo "owner: no such file or directory '$argv'" >&2 && continue
+    path=$(readlink -f "$argv")
+    basename=$(basename "$path")
+    dirname=$(dirname "$path")
+    find "$dirname" -maxdepth 1 -name "$basename" -printf "$argv: %u:%g %U:%G\n"
+done
+
+# EOF

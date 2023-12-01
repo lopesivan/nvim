@@ -1,0 +1,4 @@
+VERSION   = ${version:0.1}
+NAME      = ${Project Name:my_project}
+
+include ${Makefile Rules:base}.mk

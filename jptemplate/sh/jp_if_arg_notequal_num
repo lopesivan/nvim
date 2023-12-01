@@ -1,0 +1,4 @@
+if [ $# -ne ${narg} ]; then
+  echo 1>&2 Sintaxe: $0 in out
+  exit 1
+fi

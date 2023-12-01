@@ -1,0 +1,10 @@
+// jptemplate: ExtWinAutoload
+// id: ${shell:var=`uuidgen`; d=../content; test -e $d || mkdir $d; echo $var > $d/$var; echo -n $var }
+// Description: ${description:Description of Windows}.
+${object name:win} = new Ext.Window({
+	height   : ${height:300},
+	width    : ${width:400},
+	title    : ${title:'New Window'},
+	autoLoad : {url: '${file name:content/`< ID >`}'}
+});
+${object name:win}.show();

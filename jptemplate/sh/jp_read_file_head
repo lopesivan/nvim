@@ -1,0 +1,4 @@
+while read LREAD
+do
+    echo ${LREAD}
+done < $1 | head -n 5

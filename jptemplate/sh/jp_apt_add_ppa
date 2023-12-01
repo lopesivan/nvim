@@ -1,0 +1,64 @@
+# apt-add-ppa -- recode for debian
+
+[ `id -u` -ne 0 ] && echo "apt-add-ppa: are you root, `id -un`?" >&2 && exit 1
+
+if [ -z "`which lsb_release`" ] ; then
+    echo "apt-add-ppa: command 'lsb_release' not found" >&2
+    echo "             This most certainly means that this script ain't for your distro." >&2
+    exit 1
+fi
+[ -z "`which curl`" ] && echo "apt-add-ppa: command 'curl' not found" >&2 && exit 1
+
+[ $# -eq 0 ] && echo "Usage: apt-add-ppa <PPA [...]>" >&2 && exit 1
+
+linux_distro=$(lsb_release -is)
+linux_codename=$(lsb_release -cs)
+
+case "$linux_distro" in
+    debian|Debian)
+	linux_distro="ubuntu"
+	case "$linux_codename" in
+	    squeeze)
+		linux_codename="lucid"
+		;;
+	    *)
+		echo "apt-add-ppa: unsupported distro codename '$linux_codename'" >&2 && exit 1
+		;;
+	esac
+	;;
+    ubuntu|Ubuntu)
+	linux_distro="ubuntu"
+	;;
+    *)
+	echo "apt-add-ppa: unsupported distro '$linux_distro'" >&2 && exit 1
+	;;
+esac
+
+echo "Adding repositories as for $linux_distro/$linux_codename..."
+i=0
+for argv in $@ ; do
+    if [ -z "`echo "$argv" | egrep '^ppa:[A-Za-z0-9]+/.+$'`" ] ; then
+	echo "apt-add-ppa: bad PPA '$argv'" >&2
+	continue
+    fi
+    ppa=$(echo "$argv" | cut -d':' -f2)
+    user=$(echo "$argv" | cut -d':' -f2 | cut -d'/' -f1)
+    repo=$(echo "$argv" | cut -d':' -f2 | cut -d'/' -f2)
+    echo " * $PPA"
+    exists=$(grep "deb http://ppa.launchpad.net/$ppa/" /etc/apt/sources.list)
+    [ -n "$exists" ] && echo "apt-add-ppa: ppa '$ppa' already exists" >&2 && continue
+    echo "" >> /etc/apt/sources.list
+    echo "# apt-add-ppa: $ppa" >> /etc/apt/sources.list
+    echo "deb http://ppa.launchpad.net/$ppa/$linux_distro $linux_codename main" >> /etc/apt/sources.list
+    http=$(curl -I "https://launchpad.net/~$user" 2>/dev/null | head -1 | cut -d' ' -f2)
+    if [ -z "$http" ] || [ "_$http" != "_200" ] ; then
+	echo "apt-add-ppa: no such PPA user '$user'" >&2
+	continue
+    fi
+    i=$(($i + 1))
+done
+echo -n "Added $i repositor"
+[ $i -gt 1 ] && echo -n "ies" || echo -n "y"
+echo " to /etc/apt/sources.list"
+
+# EOF

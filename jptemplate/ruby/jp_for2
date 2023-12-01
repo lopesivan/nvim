@@ -1,0 +1,7 @@
+for ${variable_name:i} in ${first:0}..${last:9} do
+	# execute one for each item in the list until the list is not finished
+	# (And repeat all statement between do and done)
+	#
+	${cursor}
+    puts ${variable_name:i}
+end

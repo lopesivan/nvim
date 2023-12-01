@@ -1,0 +1,14 @@
+{
+  "./.projections.json": {
+    "type": "dit"
+  },
+  "*.lua": {
+    "type": "lua",
+    "template": [
+      "if not require('config').pde.{} then",
+      "\treturn {open}{close}",
+      "end"
+    ],
+    "alternate": "after_plugin"
+  }
+}

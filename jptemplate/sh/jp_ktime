@@ -1,0 +1,31 @@
+# ktime - kernel's up/idle time with ratio
+
+prefered="h" # s m h d
+
+busy=$(cat /proc/uptime | cut -d' ' -f1 | cut -d'.' -f1)
+busy_unit="s"
+while [ $busy_unit != $prefered ] ; do
+    busy=$(($busy / 60))
+    case $busy_unit in
+        s) busy_unit="m" ;;
+        m) busy_unit="h" ;;
+        h) busy_unit="d" ;;
+        d) busy_unit="*" ;;
+    esac
+done
+idle=$(cat /proc/uptime | cut -d' ' -f2 | cut -d'.' -f1)
+idle_unit="s"
+while [ $idle_unit != $prefered ] ; do
+    idle=$(($idle / 60))
+    case $idle_unit in
+        s) idle_unit="m" ;;
+        m) idle_unit="h" ;;
+        h) idle_unit="d" ;;
+        d) idle_unit="*" ;; esac
+done
+
+ratio=$(echo "scale=2;$(cat /proc/uptime | sed 's# #/#')" | bc -q)
+
+echo "$busy$busy_unit $idle$idle_unit $ratio"
+
+# EOF

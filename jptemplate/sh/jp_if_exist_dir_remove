@@ -1,0 +1,3 @@
+# if exist path `${directory}' then remove.
+_d=${directory}
+test -d $_d && rm $_d

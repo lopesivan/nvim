@@ -1,0 +1,11 @@
+# rmsp -- removes spaces in filenames
+
+ls | while read -r file ; do
+    new_file=$(echo $file | tr ' ' '_' | tr -d '[{}(),\!]' | tr -d "'\"" | tr '[A-Z]' '[a-z]' | sed 's/_-_/_/g')
+    if [ "_$file" != "_${DOLLAR}{new_file}" ] ; then
+	[ -e "$new_file" ] && echo "W: \`$file' not renamed because \`$new_file' already exists" >&2 && continue
+	mv "$file" "$new_file"
+    fi
+done
+
+# EOF

@@ -1,0 +1,7 @@
+/*
+ * ${comment}
+ */
+if (${conditional})
+{
+	${cursor}
+}

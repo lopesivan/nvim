@@ -1,0 +1,20 @@
+# mine -- get the mine type of a file
+
+function usage() {
+    echo "Usage: mime <PATH ...>" >&2
+    exit 1
+}
+
+for argv in $@ ; do
+    [ ! -e "$argv" ] && echo "mime: no such file or directory '$argv'" >&2 && continue
+    [ ! -r "$argv" ] && echo "mime: permission denied '$argv'" >&2 && continue
+    if [ -d "$argv" ] ; then
+	echo "directory"
+    elif [ ! -f "$argv" ] ; then
+	file -b "$argv"
+    else
+	file -i "$argv" | cut -d';' -f1 | cut -d' ' -f2
+    fi
+done
+
+# EOF

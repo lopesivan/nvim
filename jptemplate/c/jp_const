@@ -1,0 +1,2 @@
+const ${type:int} ${Const Name:CTE_VAR} = ${lvalue:1}
+${cursor}

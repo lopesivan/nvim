@@ -1,0 +1,11 @@
+# question -- correctly read answer in bash
+
+echo -n "Don't you love GNU/Linux [Y/n]? "
+read REPLY
+if [[ $REPLY =~ ^[Yy]?$ ]] ; then
+    echo "Linus would be proud!"
+else
+    echo "Get out of my TTY!"
+fi
+
+# EOF

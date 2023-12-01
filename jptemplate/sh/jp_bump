@@ -1,0 +1,29 @@
+# bump -- bump a version number
+
+function usage() {
+    echo "Usage: bump <[<name><separator>]version>" >&2
+    exit 1
+}
+
+[ $# -ne 1 ] && usage
+
+# version
+ver="$1"
+[ -z "$ver" ] && ver="0.0"
+[ ${DOLLAR}{#ver} -eq 1 ] && ver="$ver.0"
+
+# separator
+sep=$(echo $ver | sed -r 's/^.+(.)[0-9\.]+$/\1/')
+check=$(echo $ver | tr -d "[0-9]")
+[ ${DOLLAR}{#ver} -eq ${DOLLAR}{#check} ] && echo "bump: no version number recognized" >&2 && usage
+
+# bump
+if [ ${DOLLAR}{#sep} -eq 0 ] ; then
+    echo "$((${DOLLAR}{ver}+1))"
+elif [ ${DOLLAR}{#sep} -eq 1 ] ; then
+    echo "${DOLLAR}{ver%${DOLLAR}{sep}*}${DOLLAR}{sep}$((${DOLLAR}{ver##*${DOLLAR}{sep}}+1))"
+else
+    echo "bump: unrecognized format" >&2 && usage
+fi
+
+# EOF

@@ -1,0 +1,9 @@
+scripts  = MyApp.py
+checkfile=.pipeline_up_to_date
+
+$(checkfile): $(scripts)
+	touch $(checkfile)
+	echo "Launching some commands now."
+
+default: $(checkfile)
+

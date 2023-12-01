@@ -1,0 +1,23 @@
+# lastlogin -- retrieve last login
+
+function lastlogin_user() {
+    # 1: user
+    if [ -n "`egrep "$1:" /etc/passwd`" ] ; then
+	echo "$1: "$(lastlog -u "$1" | tail -1 | sed -r 's/\s+/ /g' | cut -d' ' -f3-)
+    else
+	echo "lastlogin: no such user '$1'" >&2
+    fi
+}
+
+if [ $# -eq 0 ] ; then
+    if [ -n "`echo ${DOLLAR}{USER}`" ] ; then
+	lastlogin_user ${DOLLAR}{USER}
+    # else?
+    fi
+else
+    for user in $@ ; do
+	lastlogin_user $user
+    done
+fi
+
+# EOF

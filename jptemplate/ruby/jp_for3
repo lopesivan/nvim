@@ -1,0 +1,2 @@
+for ${variable_name:i} in ${first:0}..${last:9} do puts ${variable_name:i} end
+${cursor}

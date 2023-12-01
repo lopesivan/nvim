@@ -1,0 +1,9 @@
+# cpp -- cp with prograss bars
+
+[ $# -ne 2 ] && echo "Usage: rsync <src> <dst>" >&2 && exit 1
+
+[ ! -x "$(which rsync)" ] && echo "E: rsync: command not found" >&2 && exit 1
+
+rsync -WavP --human-readable --progress "$1" "$2"
+
+# EOF

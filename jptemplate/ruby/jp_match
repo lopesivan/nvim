@@ -1,0 +1,3 @@
+x = "this is a 1234 test"
+x[ \d+/]
+

@@ -1,0 +1,52 @@
+PACKAGE       = ${package name}
+SVN           = svn
+SVNURL        = ${svn url}
+SVNCHECKOUT   = $(SVN) checkout $(SVNURL) $(PACKAGE)
+SVNUPDATE     = $(SVN) update   $(SVNURL) $(PACKAGE)
+DIR           = src
+INSTALLDIR    = /workspace/icsl/__deps__/compiled/$(PACKAGE)
+
+CONFIGUREFLAGS= --enable-shared --prefix=$(INSTALLDIR)
+# (the prefix bit is optional but I prefer to store special development
+# packages like this one on their own directory so it is simpler to locate,
+# configure, remove)
+
+all: ${package name}
+
+subdir-%:
+	@if [ ! -d $* ]; then mkdir -p $*; fi
+
+checkout-%:
+	@cd $(DIR); if [ -d $*/.svn ] ; then\
+		$(SVNUPDATE);               \
+	else                                \
+		$(SVNCHECKOUT);             \
+	fi
+
+configure-%:
+	@cd $(DIR); cd $*; ./configure $(CONFIGUREFLAGS)
+
+compile-%:
+	@cd $(DIR); cd $*; make
+
+install-%:
+	@cd $(DIR); cd $*; make install
+
+clean-%:
+	@cd $(DIR); cd $*; make clean
+
+##############################################################################
+#				     ${package name}
+##############################################################################
+
+${package name}   : checkout configure compile
+
+configure: configure-${package name}
+
+compile  : compile-${package name}
+
+install  : install-${package name}
+
+checkout : subdir-src checkout-${package name}
+
+clean    : clean-${package name}

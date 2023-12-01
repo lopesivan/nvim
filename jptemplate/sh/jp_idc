@@ -1,0 +1,34 @@
+# idc -- id classes (on Debian)
+
+[ $# -eq 0 ] && echo "Usage: idc <uid/gid [...]>" >&2 && exit 1
+
+e=0
+for id in $@ ; do
+    if [ -n "`echo $id | tr -d '[0-9]'`" ] ; then
+	echo "idc: '$id' is not a number" >&2
+	e=1
+	continue
+    fi
+    if [ $id -lt 99 ] ; then
+	echo "1 Debian project +"$(($id - 0))
+    elif [ $id -lt 999 ] ; then
+	echo "2 System users and groups +"$(($id - 100))
+    elif [ $id -lt 59999 ] ; then
+	echo "3 User accounts +"$(($id - 1000))
+    elif [ $id -lt 64999 ] ; then
+	echo "4 Debian project but available on-demand +"$(($id - 60000))
+    elif [ $id -lt 65533 ] ; then
+	echo "5 Strictly reserved +"$(($id - 65000))
+    elif [ $id -eq 64534 ] ; then
+	echo "6 Reserved nobody/nogroup +0"
+    elif [ $id -eq 65535 ] ; then
+	echo "7 Unusable +0"
+    else
+	echo "0 Out of range (0-65535)" >&2
+	e=1
+    fi
+done
+
+exit $e
+
+# EOF

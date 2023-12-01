@@ -1,0 +1,10 @@
+// jptemplate: ExtWin
+// id: ${shell:var=`uuidgen`; echo -n $var }
+// Description: ${description:Description of Windows}.
+	${object name:win} = new Ext.Window({
+		height : ${height:300},
+		width  : ${width:400},
+		title  : ${title:'New Window'}
+	});
+
+	${object name:win}.show();

@@ -1,0 +1,1 @@
+test -d ${directory} && rm -rf ${directory}

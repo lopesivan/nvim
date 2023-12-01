@@ -1,0 +1,4 @@
+# set default gstreamer launch.
+GST_LAUNCH="/opt/gstreamer/gstreamer-0.10.32/bin/gst-launch --gst-plugin-path=/opt/gstreamer/current"
+
+${cursor}

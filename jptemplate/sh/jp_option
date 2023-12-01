@@ -1,0 +1,9 @@
+__${option name}__=0 # set OFF
+
+[ "$1" = '--${option name}' ] && { __${option name}__=1; shift; }
+
+if [ $__${option name}__ -eq 1 ]; then
+  #__${option name}__ has value equal 1
+  #__${option name}__ ON
+
+fi

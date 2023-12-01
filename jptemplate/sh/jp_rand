@@ -1,0 +1,5 @@
+# rand -- generate random string
+
+echo $(dd if=/dev/urandom bs=1 count=64 2>/dev/null | base64 -w 0)
+
+# EOF

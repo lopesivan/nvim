@@ -1,0 +1,5 @@
+${Dynamic Variable Name} = (${TYPE}*) malloc ((size_t) (${size}) * sizeof (${TYPE}));
+
+if (!${Dynamic Variable Name}) {
+	fprintf(stderr, "!!ERROR!!");
+}

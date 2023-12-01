@@ -1,0 +1,50 @@
+# supercopier -- cp with progress bar (with pv)
+
+[ -z "`which pv`" ] && echo "supercopier: command 'pv' not found" >&2 && exit 1
+
+[ $# -lt 2 ] && echo "Usage: supercopier <source [...]> <destination>" >&2 && exit 1
+
+function supercopier() {
+    # 1: source
+    # 2: destination
+    [ ! -e "$1" ] && echo "supercopier: $1: no such file or directory" >&2 && exit 1
+    [ ! -r "$1" ] && echo "supercopier: $1: premission denied" >&2 && exit 1
+    [ "$1" = "$2" ] && echo "supercopier: input file is output file" >&2 && exit 1
+    [ -d "$S1" -a ! -d "$2" ] && mkdir -p "$2"
+    OFFSET=$(echo "`tput cols` - `echo "$1$2 "| wc -c` - 6" | bc -q)
+    printf " * %s -> %s %${DOLLAR}{OFFSET}s\n" "$1" "$2" $(du -sh "$SOURCE" 2>/dev/null | awk '{print $1}')
+    find "$1" | sed "s#$1##g" | while read TARGET ; do
+	SOURCE=$1$TARGET
+	DESTINATION=$2$TARGET
+	if [ -d "$SOURCE" ] ; then
+	    [ ! -d "$DESTINATION" ] && mkdir -p "$DESTINATION"
+	elif [ -d "$DESTINATION" ] ; then
+	    echo "supercopier: $DESTINATION: is a directory" >&2 && sleep 1
+	else
+	    pv -pert "$SOURCE" > "$DESTINATION"
+	    [ $? -ne 0 ] && echo "supercopier: pv seems to have failed ($?)" >&2 && sleep 1
+	fi
+    done
+}
+
+CMD_SOURCE=$(echo "$1" | sed "s#~#$HOME#g")
+CMD_DESTINATION=$(echo "$2" | sed "s#~#$HOME#g")
+
+if [ $# -eq 2 ] ; then
+    SOURCE=$(readlink -f "$CMD_SOURCE")
+    DESTINATION=$(readlink -f "$CMD_DESTINATION")
+    supercopier "$SOURCE" "$DESTINATION/$(basename "$SOURCE")"
+else
+    CMD_DESTINATION=$(while [ $# -gt 1 ] ; do shift; done ; echo $1)
+    I=1
+    for SOURCE in "$@" ; do
+	SOURCE=$(readlink -f "$SOURCE")
+	DESTINATION=$CMD_DESTINATION/$(basename "$SOURCE")
+	DESTINATION=$(readlink -f "$DESTINATION")
+	supercopier "$SOURCE" "$DESTINATION"
+	I=$(($I + 1))
+	[ $I -eq $# ] && break
+    done
+fi
+
+# EOF

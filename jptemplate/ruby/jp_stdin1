@@ -1,0 +1,9 @@
+if $stdin.tty?
+	ARGV.each do |file|
+		puts "do something with this file: #{file}"
+	end
+else
+	$stdin.each_line do |line|
+		puts "do something with this line: #{line}"
+	end
+end

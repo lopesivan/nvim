@@ -1,0 +1,8 @@
+#!/bin/bash
+
+COMMAND=ls            # comment1
+COMMAND="$COMMAND -l" # comment2
+COMMAND="$COMMAND -h" # comment3
+COMMAND=$COMMAND
+
+$COMMAND

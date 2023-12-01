@@ -1,0 +1,4 @@
+# Here Doc ...
+cat << ${Here Doc Flag:EOF}
+${cursor}
+${Here Doc Flag:EOF}

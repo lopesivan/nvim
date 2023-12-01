@@ -1,0 +1,15 @@
+# path -- print a formatted $PATH
+
+set -f
+
+paths=$(echo $PATH | tr ':' ' ')
+
+n=0
+for path in $paths ; do
+    nn=$(find $(readlink -f $path) -type f -executable | wc -l)
+    printf "%5d %s\n" $nn "$path"
+    n=$(($n + $nn))
+done
+printf "%5d %s\n" $n "$PATH"
+
+# EOF

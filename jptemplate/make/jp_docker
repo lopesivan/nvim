@@ -1,0 +1,18 @@
+VERSION   = ${version:0.1}
+NAME      = $(shell pwd| sed 's=.*/==')
+IMAGE     = ${DOLLAR}{USER}/$(NAME)
+TAG       = $(IMAGE):latest
+LOGFILE   = $(NAME).log
+DEPENDENCY= chef
+
+all:   watch
+run:   up
+build: $(DEPENDENCY) $(LOGFILE)
+
+$(DEPENDENCY):
+	make -C ../$@ build
+
+deploy:
+	docker run -d --name $(NAME)-server -t $(TAG)
+
+include $(BASE_DIR)/base.mk

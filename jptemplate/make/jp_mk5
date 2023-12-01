@@ -1,0 +1,36 @@
+main           = instalador.cpp
+prerequisite   = $(wildcard *.cpp)
+
+program        = $(main:.cpp=)
+sources        = $(prerequisite)
+objects        = $(sources:.cpp=.o)
+
+dependences    = $(prerequisite:.cpp=.o)
+
+##############################################################################
+##############################################################################
+##############################################################################
+
+LDLIBS      = `wx-config --libs`
+CPPFLAGS    = `wx-config --cppflags` $(WARNINGS) $(GDBFLAGS)
+#$(INCLUDE) $(DEFINEFLAGS)
+
+all:          $(program)
+
+$(program):   $(dependences)
+
+clean:
+	-rm $(program) $(objects) &>/dev/null
+
+check: all
+	ldd $(program) | wc -l | grep --color 60
+	@echo "*** All TESTS PASSED"
+
+install:
+	install -d $(DESTDIR)$(bindir)
+	install -m 0755 $(program) $(DESTDIR)$(bindir)
+
+uninstall:
+	-rm $(DESTDIR)$(bindir)/$(program) &>/dev/null
+
+.PHONY: all clean check install uninstall

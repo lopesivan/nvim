@@ -1,0 +1,3 @@
+<!-- define WX_HOME dir -->
+<set var="WX_HOME">../../</set>
+<include file="$(WX_HOME)/build/bakefiles/common_samples.bkl"/>

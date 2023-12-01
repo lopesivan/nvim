@@ -1,0 +1,9 @@
+{
+    "workspace.checkThirdParty": "Disable",
+    "workspace.library": [
+        "/home/ivan/.config/nvim-pde-local/lazy/neodev.nvim/types/nightly",
+        "/home/linuxbrew/.linuxbrew/Cellar/neovim@9e1474409/0.8.0_4/share/nvim/runtime/lua",
+        "/workspace/neovim-pde/lua",
+        "${3rd}/luv/library"
+    ]
+}

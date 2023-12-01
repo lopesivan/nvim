@@ -1,0 +1,7 @@
+<include>$(WX_HOME)/lib/vc_lib/mswd</include>
+<include>$(WX_HOME)/contrib/include</include>
+<include>$(WX_HOME)/include</include>
+
+<lib-path>$(WX_HOME)/lib</lib-path>
+<lib-path>$(WX_HOME)/contrib/lib</lib-path>
+<lib-path>$(WX_HOME)/lib/vc_lib</lib-path>

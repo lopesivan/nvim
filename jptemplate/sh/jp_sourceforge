@@ -1,0 +1,7 @@
+curl https://sourceforge.net/projects/wordwarvi/rss?path=/wordwarvi |
+	grep "<link>.*</link>" |
+		sed 's|<link>||;s|</link>||' |
+			while read url; do
+				url=`echo $url | sed 's|/download$||'`
+				echo wget $url
+			done > bb

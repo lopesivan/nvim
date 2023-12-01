@@ -1,0 +1,16 @@
+# rmex -- removes except ...
+
+list="$1"
+shift
+
+ignore="#"
+for file in "$@" ; do
+    ignore="$ignore$file#"
+done
+
+for file in $list ; do
+    [ -n "`echo $ignore | egrep \#$file\#`" ] && echo "rmex: skipping '$file'" && continue
+    [ -d "$file" ] && rm -rf "$file" || rm -f "$file"
+done
+
+# EOF

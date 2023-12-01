@@ -1,0 +1,7 @@
+if [ $__${option name}__ -eq 0 ]; then
+	#__${option name}__ has value equal 0
+	#__${option name}__ OFF
+else
+	#__${option name}__ ON
+
+fi

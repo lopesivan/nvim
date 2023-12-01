@@ -1,0 +1,58 @@
+# power_off -- set a timer to shutdown
+
+[ -z "`which shutdown`" ] && echo "power_off: command 'shutdown' not found" >&2 && exit 1
+
+function usage() {
+    echo "Usage: power_off <TIME>" >&2
+    echo "       TIME can have a format dd:hh:mm, hh:mm, mm" >&2
+    exit 1
+}
+
+function down() {
+    shutdown -h "+$1" &
+}
+
+function cancel() {
+    shutdown -c
+}
+
+pid=$(ps aux | grep "shutdown -h" | grep -v "grep shutdown -h" | awk '{print $2}')
+
+if [ $# -eq 0 ] ; then
+    usage
+elif [ -n "`echo "$1" | egrep '^[0-9]+:[0-9]+:[0-9]+$'`" ] ; then
+    # dd:hh:mm
+    days=$(echo "$1" | cut -d':' -f1)
+    hours=$(echo "$1" | cut -d':' -f2)
+    minutes=$(echo "$1" | cut -d':' -f3)
+    [ -n "$pid" ] && cancel
+    echo "Shutdown in: ${DOLLAR}{days}d ${DOLLAR}{hours}h${DOLLAR}{minutes}m"
+    down $(echo "$days * 3600 + $hours * 60 + $minutes" | bc -q)
+elif [ -n "`echo "$1" | egrep '^[0-9]+:[0-9]+$'`" ] ; then
+    # hh:mm
+    days=0
+    hours=$(echo "$1" | cut -d':' -f1)
+    minutes=$(echo "$1" | cut -d':' -f2)
+    [ -n "$pid" ] && cancel
+    echo "Shutdown in: ${DOLLAR}{days}d ${DOLLAR}{hours}h${DOLLAR}{minutes}m"
+    down $(echo "$days * 3600 + $hours * 60 + $minutes" | bc -q)
+elif [ -n "`echo "$1" | egrep '^[0-9]+$'`" ] ; then
+    # mm
+    days=0
+    hours=0
+    minutes=$(echo "$1")
+    [ -n "$pid" ] && cancel
+    echo "Shutdown in: ${DOLLAR}{days}d ${DOLLAR}{hours}h${DOLLAR}{minutes}m"
+    down $(echo "$days * 3600 + $hours * 60 + $minutes" | bc -q)
+elif [ "_$1" = "_cancel" ] ; then
+    if [ -n "$pid" ] ; then
+	echo "Shutdown (pid:$pid) canceled"
+	cancel
+    else
+	echo "No shutdown detected"
+    fi
+else
+    usage
+fi
+
+# EOF

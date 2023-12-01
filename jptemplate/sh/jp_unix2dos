@@ -1,0 +1,18 @@
+# unix2dos - change Unix/LF to Dos/CRLF
+
+set -f
+
+[ $# -eq 0 ] && echo "Usage: unix2dos <file [...]>" >&2 && exit 1
+
+for argv in $@ ; do
+    file=$(readlink -f "$argv")
+    [ ! -f "$file" ] && echo "unix2dos: $file: no such file or directory" >&2 && continue
+    [ ! -r "$file" -o ! -w "$file" ] && echo "unix2dos: $file: permission denied" >&2 && continue
+    tmp=$(tempfile)
+    echo " * $file -> $tmp -> $file"
+    sed 's/$'"/`echo \\\r`/" "$file" > "$tmp"
+    cat "$tmp" > "$file"
+    rm -f "$tmp"
+done
+
+# EOF

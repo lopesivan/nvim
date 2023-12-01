@@ -1,0 +1,3 @@
+for i from 6 by 2 to 10 do
+    print(i)
+end do;

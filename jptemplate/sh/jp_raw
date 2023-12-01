@@ -1,0 +1,15 @@
+# raw -- makes bash reads in raw mode
+# under certain conditions.
+#
+
+tty=$(stty -g)
+stty -icanon
+stty -echo
+key=$(head -c1)
+stty echo
+
+echo $key
+
+stty "$tty"
+
+# EOF

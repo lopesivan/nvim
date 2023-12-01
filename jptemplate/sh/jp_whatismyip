@@ -1,0 +1,15 @@
+# whatismyip -- retrieve your internal/external IP from command line
+
+ifconfig=$(which ifconfig 2>/dev/null)
+[ -z "$ifconfig" ] && ifconfig="/sbin/ifconfig"
+
+[ ! -x "$ifconfig" ] && echo "whatismyip: command 'ifconfig' not found" >&2 && exit 1
+[ -z "`which curl`" ] && echo "whatismyip: command 'curl' not found" >&2 && exit 1
+
+internal=$($ifconfig  | grep "inet addr:" | grep Bcast | awk '{print $2}' | cut -d':' -f2)
+external=$(curl -s ifconfig.me/ip)
+echo "$internal $external"
+
+# Todo: retrieve interface
+
+# EOF

@@ -1,0 +1,3 @@
+# if exist link `${link}' then remove.
+_l=${link}
+test -L $_l && rm $_l

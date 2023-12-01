@@ -1,0 +1,14 @@
+/**
+ * ${class commnet:This is a simple Class}
+ *
+ * @author  ${shell:git config user.name} * @version ${code version: 1.1}
+ */
+class ${class name:MyClass}
+{
+    /**
+     * ${constructor comment:The ctor and dtor will be pulled in.}
+     */
+    ${class name}();
+    //virtual ~${class name}();
+
+};

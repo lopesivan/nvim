@@ -1,0 +1,11 @@
+#
+# -${short flag}, --${long flag}
+#
+parser.add_option( '-${short flag}', '--${long flag}',
+	dest    = "${long flag}_dest",
+	default = False,
+	action  = "store_true",
+	help    = "${Description}"
+)
+
+${cursor}

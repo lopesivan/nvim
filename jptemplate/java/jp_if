@@ -1,0 +1,2 @@
+if (${conditional})
+	${cursor}

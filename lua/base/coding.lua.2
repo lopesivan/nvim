@@ -1,0 +1,338 @@
+return {
+
+  {
+    "lervag/vimtex",
+    ft = "tex",
+    config = function()
+      vim.g.vimtex_view_method = "zathura"
+      vim.g.tex_flavor = "latex"
+      vim.opt.conceallevel = 2
+    end,
+  },
+  {
+    "iamcco/markdown-preview.nvim",
+    build = "cd app && yarn install",
+    ft = { "markdown" },
+  },
+
+  {
+    "lukas-reineke/headlines.nvim",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    ft = "markdown",
+    event = "VeryLazy",
+    config = function()
+      require("headlines").setup {
+        markdown = {
+          query = vim.treesitter.query.parse(
+            "markdown",
+            [[
+                            (atx_heading [
+                                (atx_h1_marker)
+                                (atx_h2_marker)
+                                (atx_h3_marker)
+                                (atx_h4_marker)
+                                (atx_h5_marker)
+                                (atx_h6_marker)
+                            ] @headline)
+
+                            (thematic_break) @dash
+
+                            (fenced_code_block) @codeblock
+
+                            (block_quote_marker) @quote
+                            (block_quote (paragraph (inline (block_continuation) @quote)))
+                        ]]
+          ),
+          headline_highlights = { "Headline" },
+          codeblock_highlight = "CodeBlock",
+          dash_highlight = "Dash",
+          dash_string = "-",
+          quote_highlight = "Quote",
+          quote_string = "┃",
+          fat_headlines = true,
+          fat_headline_upper_string = "▃",
+          fat_headline_lower_string = "🬂",
+        },
+      }
+    end,
+  },
+
+  {
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    opts = {},
+  },
+  {
+    "numToStr/Comment.nvim",
+    dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
+    keys = { { "gc", mode = { "n", "v" } }, { "gcc", mode = { "n", "v" } }, { "gbc", mode = { "n", "v" } } },
+    config = function(_, _)
+      local opts = {
+        ignore = "^$",
+        pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+      }
+      require("Comment").setup(opts)
+    end,
+  },
+  {
+    "andymass/vim-matchup",
+    event = { "BufReadPost" },
+    config = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end,
+  },
+
+  { "lopesivan/noah.vim", event = "BufEnter" },
+  {
+    "lopesivan/vim-pythonx",
+    event = "BufEnter",
+    build = function()
+      vim.cmd [[UpdateRemotePlugins]]
+    end,
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      {
+        "SirVer/ultisnips",
+        config = function()
+          -- vim.g.UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
+          -- vim.g.UltiSnipsJumpForwardTrigger = "<Plug>(ultisnips_jump_forward)"
+          -- vim.g.UltiSnipsJumpBackwardTrigger = "<Plug>(ultisnips_jump_backward)"
+          -- vim.g.UltiSnipsListSnippets = "<c-x><c-s>"
+          vim.g.UltiSnipsRemoveSelectModeMappings = 0
+          vim.g.UltiSnipsSnippetDirectories = { "UltiSnips" }
+          vim.g.UltiSnipsEditSplit = "vertical"
+        end,
+      },
+      "honza/vim-snippets",
+      "lopesivan/cmp-jptemplate",
+      "quangnguyen30192/cmp-nvim-ultisnips",
+    },
+    opts = function()
+      local cmp = require "cmp"
+      local luasnip = require "cmp_nvim_ultisnips.mappings"
+      local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+      local compare = require "cmp.config.compare"
+
+      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })
+
+      local source_names = {
+        nvim_lsp = "(LSP)",
+        ultisnips = "(Snippet)",
+        buffer = "(Buffer)",
+        path = "(Path)",
+      }
+      local duplicates = {
+        buffer = 1,
+        path = 1,
+        nvim_lsp = 0,
+        ultisnips = 1,
+      }
+      local has_words_before = function()
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
+      end
+
+      return {
+        completion = {
+          completeopt = "menu,menuone,noinsert",
+        },
+        sorting = {
+          priority_weight = 2,
+          comparators = {
+            compare.score,
+            compare.recently_used,
+            require "clangd_extensions.cmp_scores",
+            compare.offset,
+            compare.exact,
+            compare.kind,
+            compare.sort_text,
+            compare.length,
+            compare.order,
+          },
+        },
+        snippet = {
+          expand = function(args)
+            vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+          end,
+        },
+        mapping = cmp.mapping.preset.insert {
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping {
+            i = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
+            c = function(fallback)
+              if cmp.visible() then
+                cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false }
+              else
+                fallback()
+              end
+            end,
+          },
+          ["<C-i>"] = function(fallback)
+            if vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
+              press "<ESC>:call UltiSnips#JumpForwards()<CR>"
+            elseif cmp.visible() then
+              cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+            elseif has_any_words_before() then
+              press "<Space>"
+            else
+              fallback()
+            end
+          end,
+          ["<Tab>"] = function(fallback)
+            if vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
+              press "<ESC>:call UltiSnips#JumpForwards()<CR>"
+            elseif cmp.visible() then
+              cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+            elseif has_any_words_before() then
+              press "<Tab>"
+            else
+              fallback()
+            end
+          end,
+          ["<S-Tab>"] = function(fallback)
+            if vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
+              press "<ESC>:call UltiSnips#JumpBackwards()<CR>"
+            elseif cmp.visible() then
+              cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
+            else
+              fallback()
+            end
+          end,
+        },
+        sources = cmp.config.sources {
+          { name = "ultisnips", group_index = 1 },
+          { name = "nvim_lsp", group_index = 1 },
+          { name = "buffer", group_index = 2 },
+          { name = "path", group_index = 2 },
+        },
+        formatting = {
+          fields = { "kind", "abbr", "menu" },
+          format = function(entry, item)
+            local duplicates_default = 0
+            item.menu = source_names[entry.source.name]
+            item.dup = duplicates[entry.source.name] or duplicates_default
+            return item
+          end,
+        },
+        experimental = {
+          hl_group = "LspCodeLens",
+          ghost_text = {},
+        },
+        window = {
+          documentation = {
+            border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+            winhighlight = "NormalFloat:NormalFloat,FloatBorder:TelescopeBorder",
+          },
+        },
+      }
+    end,
+  },
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      defaults = {
+        ["<leader>t"] = { name = "+Test" },
+        ["<leader>tt"] = { name = "+Task" },
+      },
+    },
+  },
+  {
+    "vim-test/vim-test",
+    opts = {
+      setup = {},
+    },
+    config = function(plugin, opts)
+      vim.g["test#strategy"] = "neovim"
+      vim.g["test#neovim#term_position"] = "belowright"
+      vim.g["test#neovim#preserve_screen"] = 1
+
+      -- Set up vim-test
+      for k, _ in pairs(opts.setup) do
+        opts.setup[k](plugin, opts)
+      end
+    end,
+  },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-neotest/neotest-vim-test",
+      "vim-test/vim-test",
+      "stevearc/overseer.nvim",
+    },
+    keys = {
+      { "<leader>td", "<cmd>w|lua require('neotest').run.run({vim.fn.expand('%'), strategy = 'dap'})<cr>", desc = "Debug File" },
+      { "<leader>tL", "<cmd>w|lua require('neotest').run.run_last({strategy = 'dap'})<cr>", desc = "Debug Last" },
+      { "<leader>ta", "<cmd>w|lua require('neotest').run.attach()<cr>", desc = "Attach" },
+      { "<leader>tf", "<cmd>w|lua require('neotest').run.run(vim.fn.expand('%'))<cr>", desc = "File" },
+      { "<leader>tF", "<cmd>w|lua require('neotest').run.run(vim.loop.cwd())<cr>", desc = "All Files" },
+      { "<leader>tl", "<cmd>w|lua require('neotest').run.run_last()<cr>", desc = "Last" },
+      { "<leader>tn", "<cmd>w|lua require('neotest').run.run()<cr>", desc = "Nearest" },
+      { "<leader>tN", "<cmd>w|lua require('neotest').run.run({strategy = 'dap'})<cr>", desc = "Debug Nearest" },
+      { "<leader>to", "<cmd>w|lua require('neotest').output.open({ enter = true })<cr>", desc = "Output" },
+      { "<leader>ts", "<cmd>w|lua require('neotest').run.stop()<cr>", desc = "Stop" },
+      { "<leader>tS", "<cmd>w|lua require('neotest').summary.toggle()<cr>", desc = "Summary" },
+    },
+    opts = function()
+      return {
+        adapters = {
+          require "neotest-vim-test" {
+            ignore_file_types = { "python", "vim", "lua" },
+          },
+        },
+        status = { virtual_text = true },
+        output = { open_on_run = true },
+        -- overseer.nvim
+        consumers = {
+          overseer = require "neotest.consumers.overseer",
+        },
+        overseer = {
+          enabled = true,
+          force_default = true,
+        },
+      }
+    end,
+    config = function(_, opts)
+      local neotest_ns = vim.api.nvim_create_namespace "neotest"
+      vim.diagnostic.config({
+        virtual_text = {
+          format = function(diagnostic)
+            local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+            return message
+          end,
+        },
+      }, neotest_ns)
+      require("neotest").setup(opts)
+    end,
+  },
+  {
+    "stevearc/overseer.nvim",
+    keys = {
+      { "<leader>ttR", "<cmd>OverseerRunCmd<cr>", desc = "Run Command" },
+      { "<leader>tta", "<cmd>OverseerTaskAction<cr>", desc = "Task Action" },
+      { "<leader>ttb", "<cmd>OverseerBuild<cr>", desc = "Build" },
+      { "<leader>ttc", "<cmd>OverseerClose<cr>", desc = "Close" },
+      { "<leader>ttd", "<cmd>OverseerDeleteBundle<cr>", desc = "Delete Bundle" },
+      { "<leader>ttl", "<cmd>OverseerLoadBundle<cr>", desc = "Load Bundle" },
+      { "<leader>tto", "<cmd>OverseerOpen<cr>", desc = "Open" },
+      { "<leader>ttq", "<cmd>OverseerQuickAction<cr>", desc = "Quick Action" },
+      { "<leader>ttr", "<cmd>OverseerRun<cr>", desc = "Run" },
+      { "<leader>tts", "<cmd>OverseerSaveBundle<cr>", desc = "Save Bundle" },
+      { "<leader>ttt", "<cmd>OverseerToggle<cr>", desc = "Toggle" },
+    },
+    opts = {},
+  },
+}

@@ -1,0 +1,2 @@
+if ( (${Dynamic Variable Name:var} = (${TYPE:int}*) malloc ((size_t) ${size:1} * sizeof (${TYPE}) )) == NULL )
+    return 1;

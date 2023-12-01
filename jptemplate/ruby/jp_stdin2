@@ -1,0 +1,7 @@
+until ARGV.empty? do
+	puts "From arguments: #{ARGV.shift}"
+end
+
+while a = gets
+	puts "From stdin: #{a}"
+end

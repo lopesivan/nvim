@@ -1,0 +1,9 @@
+# keep-screen-on -- tells X to never go to sleep
+
+[ -z "`which xset`" ] && echo "keep-screen-on: command 'xset' not found" >&2 && exit 1
+
+xset -dpms
+xset s off
+xset q | egrep '^\s+DPMS' | sed -r 's/^\s+//'
+
+# EOF

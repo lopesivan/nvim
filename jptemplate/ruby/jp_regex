@@ -1,0 +1,2 @@
+#er  = Regexp.new("${regex pattern:^[0-9]}")
+er = %r{${regex pattern}}

@@ -1,0 +1,3 @@
+for ((${initializer expression:i = 0}; ${loop test expression:i<10}; ${counting expression:++i})) {
+	${cursor}
+}

@@ -1,0 +1,5 @@
+[ $${narg} ] && {
+  ${var}=${narg}
+} || {
+  echo 1>&2 Sintaxe: $0 in out
+}

@@ -1,0 +1,7 @@
+for ${variable1 name:i} in ${var1 first:0}..${var1 last:9} do
+	for ${variable2 name:j} in ${var2 first:0}..${var2 last:9} do
+
+    	puts "%d - %d" %[ ${variable1 name:i}, ${variable2 name:j} ]
+		${cursor}
+	end
+end

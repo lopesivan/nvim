@@ -1,0 +1,10 @@
+# alignr -- output text on the right in a terminal
+
+[ $# -eq 0 ] && echo "Usage: alignr <text [...]>" >&2 && exit 1
+
+columns=$(tput cols)
+for argv in "$@" ; do
+    printf "%${DOLLAR}{columns}s\n" "$argv"
+done
+
+# EOF

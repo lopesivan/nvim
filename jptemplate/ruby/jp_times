@@ -1,0 +1,7 @@
+${define number of times:10}.times do |x|
+	puts x # Debug Mode
+#	In this iterating construct the current value
+#	passed in | | is the current value of x.
+	${cursor}
+end
+

@@ -1,0 +1,3 @@
+# if not exist path `${directory}' then create
+_d=${directory}
+test -d $_d || mkdir $_d

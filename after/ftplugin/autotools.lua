@@ -1,0 +1,3 @@
+
+vim.opt.commentstring = "#\\ %s"
+

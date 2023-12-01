@@ -1,0 +1,5 @@
+tot := 0:
+for i from 11 by 2 while i < 100 do
+   tot := tot + i
+end do:
+tot;

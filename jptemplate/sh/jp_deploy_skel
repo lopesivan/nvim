@@ -1,0 +1,49 @@
+# deploy-skel -- deploy /etc/skel configuration
+
+function usage() {
+    echo "Usage: deploy-skel [--force] [user ...]" >&2
+    echo "       Will never overwrite, unless --force is supplied" >&2
+    echo "       Without users supplied, will loop through every user accounts (1000 <= uid <= 59999)" >&2
+    exit 1
+}
+
+force="false"
+for argv in $@ ; do
+    [ -z "$argv" ] && continue
+    [ "$argv" == "--help" ] && usage
+    [ "$argv" == "--force" ] && force="true" && shift
+done
+
+function deploy_skel_for_user() {
+    [ -z "$line" ] && return
+    user=$(echo $line | cut -d':' -f1)
+    uid=$(echo $line | cut -d':' -f3)
+    home=$(echo $line | cut -d':' -f6)
+    if [ $uid -ge 1000 ] && [ $uid -le 59999 ] ; then
+	while read file ; do
+	    filename=$(basename "$file")
+	    if [ "$force" = "true" ] || [ ! -f "$home/$filename" ] ; then
+		if [ "$force" = "true" ] ; then
+		    printf "[F] $user: $home/$filename\n"
+		else
+		    printf "$user: $home/$filename\n"
+		fi
+	        cp -r "$file" "$home/" > /dev/null
+		chown -R "$user:$user" "$home/$filename"
+	    fi
+	done < <(find /etc/skel -maxdepth 1 | sed '1d')
+    fi
+}
+
+if [ $# -gt 0 ] ; then
+    for login in $@ ; do
+	line=$(egrep ^$login: /etc/passwd)
+	deploy_skel_for_user
+    done
+else
+    while read line ; do
+	deploy_skel_for_user
+    done < <(cat /etc/passwd)
+fi
+
+# EOF

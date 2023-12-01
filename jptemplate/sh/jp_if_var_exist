@@ -1,0 +1,1 @@
+[ "$${variable}" ] && { echo command for $${variable}; }

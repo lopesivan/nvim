@@ -1,0 +1,22 @@
+#
+# Use one of a number of methods for reading and writing the file. To
+# read each line in order, you can use the each_line method, which takes
+# a block as an argument, enclosed in do...end keywords, or {...}
+# braces. Reading a file this way is similar to iterating over an array:
+
+${variable descriptor of file:f} = File.open("${name of file:myfile.txt}", "r")
+
+	${variable descriptor of file:f}.each_line do|line|
+		puts "I read this line: #{line}"
+	end
+
+${variable descriptor of file:f}.close
+
+# Read individual strings for formatted data in a number of ways. After
+# opening the file use the gets method to read a line and store the
+# result in a variable:
+#${variable descriptor of file:f} = File.open("${name of file:myfile.txt}", "r")
+#line = ${variable descriptor of file:f}.gets
+#puts "The line I read is: #{line}"
+
+

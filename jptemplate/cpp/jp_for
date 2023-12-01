@@ -1,0 +1,5 @@
+for (${initialization}; ${condition}; ${update})
+{
+	/* `< comment here >` */
+	${cursor}
+}

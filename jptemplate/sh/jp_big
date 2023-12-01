@@ -1,0 +1,19 @@
+# big -- list big files
+
+if [ $# -ne 2 ] ; then
+    echo "Usage: big <dir> <size>" >&2
+    echo "       SIZE is in bytes but can be 512M and so on" >&2
+    exit 1
+fi
+
+dir=$(readlink -f "$1")
+size=$(echo "$2" | tr "[a-z]" "[A-Z]" | egrep "^[0-9]+[MGT]?$")
+[ ! -e "$dir" ] && echo "big: $dir: no such file or directory" >&2 && exit 1
+[ ! -d "$dir" ] && echo "big: $dir: not a directory" >&2 && exit 1
+[ ! -r "$dir" ] && echo "big: $dir: permission denied" >&2 && exit 1
+[ -z "$size" ] && echo "big: invalid size" >&2 && exit 1
+
+echo " * Searching in '$dir' for files bigger than ${DOLLAR}{size}B..."
+find "$dir" -type f -size +$size -exec ls -lh {} \; 2>/dev/null | sed -r 's/ +/ /g' | cut -d' ' -f5,9-
+
+# EOF

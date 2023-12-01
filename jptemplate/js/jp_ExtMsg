@@ -1,0 +1,5 @@
+// jptemplate: ExtMsg
+// Description: ${description:Description of Message function}.
+Ext.Msg.alert('${Title:Title}', '${message:message}')
+
+${cursor}

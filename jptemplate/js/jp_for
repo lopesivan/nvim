@@ -1,0 +1,6 @@
+for (${initialization}; ${condition}; ${update})
+{
+	/* <+ =statements= +>:
+	 */
+	${cursor}
+}

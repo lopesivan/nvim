@@ -1,0 +1,5 @@
+// jptemplate: ExtConfirm
+// Description: ${description:Description of Message function}.
+Ext.Msg.confirm('${Title:Title}', '${message:message}')
+
+${cursor}

@@ -1,0 +1,32 @@
+#> cat input.txt | ./myprog.rb
+#do something with this line: this
+#do something with this line: is
+#do something with this line: a
+#do something with this line: test
+#> ./myprog.rb < input.txt
+#do something with this line: this
+#do something with this line: is
+#do something with this line: a
+#do something with this line: test
+#> ./myprog.rb arg1 arg2 arg3
+#do something with this file: arg1
+#do something with this file: arg2
+#do something with this file: arg3
+
+if $stdin.tty?
+	ARGV.each do |file|
+		puts "do something with this file: #{file}"
+	end
+else
+	$stdin.each_line do |line|
+		puts "do something with this line: #{line}"
+	end
+end
+
+until ARGV.empty? do
+	puts "From arguments: #{ARGV.shift}"
+end
+
+while a = gets
+	puts "From stdin: #{a}"
+end

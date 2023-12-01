@@ -1,0 +1,50 @@
+# netcraft -- retrieve web server from URL
+
+[ -z "`cat /proc/net/arp | egrep '^[0-9]'`" ] && echo "netcraft: no network connection" >&2 && exit 1
+[ -z "`which curl`" ] && echo "netcraft: command 'curl' not found" && exit 1
+
+if [ $# -eq 0 ] ; then
+    echo "Usage: netcraft <host [...]>" >&2
+    echo "       host must be HTTP or HTTPS" >&2
+    exit 1
+fi
+
+function get_server() {
+    # 1: url
+    dump=$(curl -I "$1" 2>/dev/null | cat -e | sed -r 's/...$//g' | sed 's/: /:/g')
+    for line in $dump ; do
+	case "$line" in
+	    Location*)
+		location=$(echo "$line" | cut -d':' -f2- | sed -r 's#/$##')
+                [ -n "$(echo $location | egrep '^/')" ] && location="$1$location"
+		get_server "$location"
+		return
+		;;
+	    Server*)
+		server=$(echo "$line" | cut -d':' -f2-)
+		echo "$1 $server"
+		return
+		;;
+	esac
+    done
+    echo "$1 "
+}
+
+for argv in $@ ; do
+    case "$argv" in
+	http://*|https://*)
+	    get_server "$argv"
+	    continue
+	    ;;
+	*)
+	    if [ -n "`echo "$argv" | egrep '^[a-z]*://'`" ] ; then
+		echo "netcraft: unsupported protocol '"$(echo "$argv" | cut -d':' -f1)"'" >&2
+		continue
+	    fi
+	    get_server "http://$argv"
+	    continue
+	    ;;
+    esac
+done
+
+# EOF

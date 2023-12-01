@@ -1,0 +1,2 @@
+typedef ${defined type:int} ${new name of type:value_t};
+${cursor}

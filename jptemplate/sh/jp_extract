@@ -1,0 +1,70 @@
+# extract -- one script to extract them all
+
+function cmd() {
+    for bin in "$1" ; do
+	[ -n "`which $bin`" ] && echo "extract: command '$bin' not found" >&2 && return 1
+    done
+    return 0
+}
+
+function extract() {
+    echo " * Extracting `basename $file` to `pwd`..."
+    case "$file" in
+	*.tar)			cmd "tar" && tar xvf "$file" ;;
+	*.tar.bz2|*.tbz2)	cmd "tar" && tar xvjf "$file" ;;
+	*.tar.gz|*.tgz)		cmd "tar" && tar xvzf "$file" ;;
+	*.tar.xz|*.txz)		cmd "tar" && tar xvJf "$file" ;;
+	*.tar.lzma|*.tlzma)	cmd "tar" && tar --lzma xf "$file" ;;
+	*.tar.*|*.t*)		cmd "tar" && \
+	    echo "W: Using generic tar decompression -- might not work" && \
+	    tar xf "$file" ;;
+	*.bz2)			cmd "bunzip2" && bunzip2 "$file" ;;
+	*.rar)			cmd "unrar" && unrar x "$file" ;;
+	*.gz)			cmd "gunzip" && gunzip "$file" ;;
+	*.zip)			cmd "unzip" && unzip "$file" ;;
+	*.Z)			cmd "uncompress" && uncompress "$file" ;;
+	*.7z)			cmd "p7zip" && p7zip -d "$file" ;;
+	*.xz)			cmd "unxz" && unxz "$file" ;;
+	*.exe|*.cab)		cmd "cabextract" && cabextract "$file" ;;
+	*.ace)			cmd "unace" && unace e "$file" ;;
+	*.rpm)			cmd "rpm2cpio cpio" && rpm2cpio "$file" | cpio -idmv ;;
+	*.iso)			cmd "poweriso" && poweriso extract "$file" / ;;
+#	*.deb)			cmd "dpkg-deb" && dpkg-deb -x "$FILE" ;;
+	*.deb)			cmd "ar" && ar xv "$file"
+            # this one also extract the tarballs witin the .deb
+	    [ $? -ne 0 ] && continue
+	    ar t "$file" | grep -E '\.tar\.gz$' | \
+		while read subfile ; do
+		extract "$subfile"
+	    done
+	    ;;
+	*)
+	    cmd "tar" && \
+		echo "W: Using generic tar decompression -- will most likely not work" >&2 && \
+		tar xf "$file"
+	    [ $? -ne 0 ] && cmd "p7zip" && \
+		echo "W: Using generic p7zip decompression -- will most likely not work" >&2 && \
+		p7zip -d "$file";;
+    esac
+}
+
+[ $# -eq 0 ] && echo "Usage: extract <file [...]>" >&2 && exit 1
+
+for file in "$@" ; do
+    [ ! -e "$file" ] && echo "extract: $file: no such file or directory" >&2 && exit 1
+    [ -d "$file" ] && echo "extract: $file: is a directory" >&2 && exit 1
+    [ ! -r "$file" ] && echo "extract: $file: permission denied" >&2 && exit 1
+    file=$(readlink -f "$file")
+    name=$(basename "$file" | sed -r 's/(\.[a-zZ2]{2,3})?\.[a-zZ2]{1,4}$//')
+    if [ -d "$name" ] ; then
+	echo -n "   Directory \`$name' exists. Overwite [Y/n]? "
+	read rep
+	[ "_$rep" = "_n" ] && continue
+	rm -rf "$name"
+    fi
+    # prevent tab-bombs
+    mkdir "$name" && cd "$name"
+    extract
+done
+
+# EOF

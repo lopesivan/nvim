@@ -1,0 +1,3 @@
+${var name:number} = ${value of variable:10}
+${var name:number}.upto(${this var up TO:12}) {|i| puts i }
+

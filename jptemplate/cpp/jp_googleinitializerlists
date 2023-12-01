@@ -1,0 +1,7 @@
+${MyClass}::${MyClass}(int var)
+    : ${some_var}_(var),
+      ${some_other_var}_(var + 1) {
+
+    ${DoSomething}();
+
+}

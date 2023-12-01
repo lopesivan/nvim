@@ -1,0 +1,13 @@
+_l=${link}
+echo Link: $_l
+if [ -L $_l ] ; then
+   if [ -e $_l ] ; then
+      echo "Good link"
+   else
+      echo "Broken link"
+   fi
+elif [ -e $_l ] ; then
+   echo "Not a link"
+else
+   echo "Missing"
+fi

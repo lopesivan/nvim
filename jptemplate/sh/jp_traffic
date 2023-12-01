@@ -1,0 +1,43 @@
+# traffic -- mesures traffic on interfaces
+
+[ -z "`cat /proc/net/arp | egrep '^[0-9]'`" ] && echo "traffic: no network connection" >&2 && exit 1
+
+scale=$(echo "1024*1024" | bc -q)
+prefered="" # empty for auto (scale), B KB MB GB TB otherwise
+
+if [ $# -eq 0 ] ; then
+    interfaces=$(cat /proc/net/arp | sed -e '1d' | awk '{print $NF}' | uniq)
+else
+    interfaces=$@
+fi
+
+for interface in $interfaces ; do
+    stream=$(cat /proc/net/dev | egrep "^ *$interface" | cut -d':' -f2-)
+    [ -z "$stream" ] && echo "$interface down" >&2 && continue
+    in=$(echo $stream | cut -d' ' -f1)
+    out=$(echo $stream | cut -d' ' -f9)
+    in_unit="B"
+    out_unit="B"
+    while [ $in -gt $scale -a -z "$prefered" ] || [ -n "$prefered" -a $in_unit != "$prefered" -a $in -gt 0 ] ; do
+	in=$(($in / 1024))
+	case $in_unit in
+            B) in_unit="KB" ;;
+            KB) in_unit="MB" ;;
+            MB) in_unit="GB" ;;
+            GB) in_unit="TB" ;;
+            TB) in_unit="*B" ;; esac
+    done
+    while [ $out -gt $scale -a -z "$prefered" ] || [ -n "$prefered" -a $out_unit != "$prefered" -a $out -gt 0 ] ; do
+	out=$(($out / 1024))
+	case $out_unit in
+            B) out_unit="KB" ;;
+            KB) out_unit="MB" ;;
+            MB) out_unit="GB" ;;
+            GB) out_unit="TB" ;;
+            TB) out_unit="*B" ;; esac
+    done
+    [ $out -gt 0 ] && ratio=$(echo "scale=2;$in/$out" | bc -q) || ratio="0.00"
+    echo "$interface up $in $in_unit $out $out_unit $ratio"
+done
+
+# EOF

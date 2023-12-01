@@ -1,0 +1,8 @@
+define ${command}
+  ${code}
+end
+document ${command}
+  ${help text}
+end
+
+${cursor}

@@ -1,0 +1,18 @@
+# release -- outputs LSB-compliant OS release informations
+
+os=$(uname -o)
+lang=$(bash -c set | grep -E '^(LANG|LC_)' | cut -d'=' -f2 | cut -d'.' -f1)
+cpuinfo=$(cat /proc/cpuinfo | grep flags | grep ' lm ')
+[ -z "$cpuinfo" ] && cpu="x86" || cpu="x64"
+kernel=$(uname -sr | cut -d'-' -f1)
+
+if [ -z "`which lsb_release`" ] ; then
+    echo "release: command 'lsb_release' not found" >&2
+    echo "$os $cpu [$lang] with $kernel"
+else
+    distrib=$(lsb_release -i | awk '{printf $NF}')
+    version=$(lsb_release -sr)" \"$(exec lsb_release -sc | sed 's/^[a-z]/\U&/')"\"
+    echo "$os $distrib $version $cpu [$lang] with $kernel"
+fi
+
+# EOF

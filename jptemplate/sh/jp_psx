@@ -1,0 +1,11 @@
+# psx -- ps aux | grep alias-like script
+
+if [ $# -eq 0 ] ; then
+    ps aux | grep -v "/bin/bash $0"
+else
+    for argv in $@ ; do
+	ps aux | grep "$argv" | grep -v "grep $argv" | grep -v "/bin/bash $0 $*"
+    done
+fi
+
+# EOF

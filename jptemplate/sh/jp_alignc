@@ -1,0 +1,12 @@
+# alignc -- center text in a terminal
+
+[ $# -eq 0 ] && echo "Usage: alignc <text [...]>" >&2 && exit 1
+
+columns=$(echo `tput cols`"/2" | bc -q)
+for argv in "$@" ; do
+    offset=$(echo `echo $argv | wc -c`"/2" | bc -q)
+    cols=$(($columns + $offset + 1))
+    printf "%${DOLLAR}{cols}s\n" "$argv"
+done
+
+# EOF

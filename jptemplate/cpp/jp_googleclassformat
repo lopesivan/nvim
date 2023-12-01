@@ -1,0 +1,21 @@
+class ${MyClass} : public ${OtherClass} {
+public:
+    ${MyClass}();
+    explicit ${MyClass}(int var);
+    ~${MyClass}() {}
+
+    void ${SomeFunction}();
+    void ${SomeFunctionThatDoesNothing}() {
+    }
+
+    void ${set_some_var}(int var) { ${some_var}_ = var; }
+    int  ${some_var() const { return ${some_var}_; }
+
+private:
+    bool ${SomeInternalFunction}();
+
+    int ${some_var}_;
+    int ${some_other_var}_;
+    DISALLOW_COPY_AND_ASSIGN(${MyClass});
+};
+

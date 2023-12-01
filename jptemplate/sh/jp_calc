@@ -1,0 +1,5 @@
+# calc -- simple cli calculator using bc
+
+echo "$*" | bc -l
+
+# EOF

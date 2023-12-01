@@ -1,0 +1,3 @@
+# if exist file `_f' then remove.
+_f=${file_name}
+test -e $_f && rm $_f

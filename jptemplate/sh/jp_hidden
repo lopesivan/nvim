@@ -1,0 +1,5 @@
+# hidden -- list only hidden files in cwd
+
+ls -d .[[:alnum:]]* 2> /dev/null && exit 0 || echo "hidden: no hidden files here..." >&2 && exit 1
+
+# EOF
