@@ -6,13 +6,8 @@ vim.api.nvim_create_user_command("SaveMacro", function(params)
 
   vim.fn.mkdir(dir, "p")
 
-  vim.fn.writefile(
-    { content },
-    file,
-    "a"
-  )
+  vim.fn.writefile({ content }, file, "a")
 end, { nargs = 1 })
-
 
 vim.api.nvim_create_user_command("LoadMacro", function(params)
   local name = params.args
@@ -26,8 +21,7 @@ end, { nargs = 1 })
 
 vim.api.nvim_create_user_command("Reload", function()
   vim.cmd(":source $MYVIMRC")
-end
-, {})
+end, {})
 
 --autosave
 -- vim.api.nvim_create_autocmd("BufLeave", {
@@ -47,9 +41,4 @@ end
 --     vim.cmd("write")
 --   end
 -- })
-
-
-vim.api.nvim_create_user_command("Spelling", function()
-  vim.opt.spell = true
-  vim.opt.spelllang = { "en_us", "es" }
-end, {})
+--
