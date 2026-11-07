@@ -1,6 +1,6 @@
 return {
   "hat0uma/csvview.nvim",
-  enabled = false,
+  enabled = true,
   ---@module "csvview"
   ---@type CsvView.Options
   opts = {
