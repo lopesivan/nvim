@@ -8,7 +8,7 @@ return {
   },
   config = function()
     local capabilities = vim.lsp.protocol.make_client_capabilities()
-    local lspconfig = require('lspconfig')
+    local lspconfig = require("lspconfig")
 
     -- Lua
     vim.lsp.config("lua_ls", {
@@ -16,24 +16,24 @@ return {
       settings = {
         Lua = {
           runtime = {
-            version = 'LuaJIT', -- Use LuaJIT for Neovim
+            version = "LuaJIT", -- Use LuaJIT for Neovim
           },
           diagnostics = {
-            globals = { 'vim' }, -- Recognize `vim` as a global
+            globals = { "vim" }, -- Recognize `vim` as a global
             disable = {
               "unused-local",
               "param-type-mismatch",
               "missing-return",
               "white-space",
-              "trailing-space"
+              "trailing-space",
             },
           },
           workspace = {
             -- library = vim.api.nvim_get_runtime_file("", true), -- Make LSP aware of Neovim runtime
             library = {
-              vim.env.VIMRUNTIME
+              vim.env.VIMRUNTIME,
             },
-            checkThirdParty = false,                           -- Disable third-party library warnings
+            checkThirdParty = false, -- Disable third-party library warnings
           },
           telemetry = {
             enable = false, -- Disable telemetry for privacy
@@ -47,14 +47,15 @@ return {
     })
 
     vim.lsp.config("clangd", {})
+    vim.lsp.config("pyright", {})
     vim.lsp.config("jsonls", {})
     vim.lsp.config("kotlin_lsp", {})
     vim.lsp.config("rust_analyzer", {})
     vim.lsp.config("jsonls", {})
     vim.lsp.config("powershell_es", {})
-    vim.lsp.config("astro", {})
     vim.lsp.config("ts_ls", {})
     vim.lsp.config("glsl_analyzer", {})
+    -- vim.lsp.config("astro", {})
     -- vim.lsp.config("tailwindcss", {})
 
     vim.lsp.config("lemminx", {
@@ -68,5 +69,5 @@ return {
       end,
     })
     --
-  end
+  end,
 }
