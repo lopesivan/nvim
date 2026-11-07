@@ -1,4 +1,4 @@
-vim.g.mapleader = " " -- set space as leader
+vim.g.mapleader = " "      -- set space as leader
 vim.g.maplocalleader = " " -- Set space as local leader
 
 require("config.lazy")
@@ -26,10 +26,3 @@ vim.fn.setenv("DAP_LOG_FILE", vim.fn.stdpath("cache") .. "/dap.log")
 
 -- vim.g.loaded_netrw = 1
 -- vim.g.loaded_netrwPlugin = 1
---
--- Mapeia a tecla ASCII 31 para fechar o Neovim: <c-/>
-vim.keymap.set("n", "<C-_>", ":q!<CR>", { noremap = true, silent = true })
-
--- vim.keymap.set("n", "?", ":let g:session_autosave='no'<CR>:q!<CR>")
-vim.keymap.set("n", "\\\\", ":w!<CR>")
---
