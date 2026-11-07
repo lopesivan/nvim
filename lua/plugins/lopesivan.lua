@@ -41,4 +41,6 @@ return {
     --     { "T", [[<CMD>call <Plug>typecast<CR>]], mode = "x" },
     -- },
   },
+
+  {"lopesivan/colorbuddy.nvim"},
 }
