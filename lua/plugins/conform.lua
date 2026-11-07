@@ -1,6 +1,6 @@
 return {
-  'stevearc/conform.nvim',
-  enabled = false,
+  "stevearc/conform.nvim",
+  enabled = true,
   config = function()
     local conform = require("conform")
     conform.setup({
@@ -9,8 +9,8 @@ return {
       },
     })
 
-    vim.keymap.set("n", "ff", function ()
-     conform.format()
+    vim.keymap.set("n", "ff", function()
+      conform.format()
     end, {})
-  end
+  end,
 }
