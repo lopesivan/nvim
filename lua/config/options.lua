@@ -1,7 +1,7 @@
 local opt = vim.opt
 -- vim.opt.background = "light"
 -- search is slow when true
-opt.hlsearch = false
+opt.hlsearch = true
 opt.expandtab = true
 opt.shiftwidth = 2
 
@@ -26,6 +26,8 @@ opt.smartcase = true
 -- vim.o.winborder = 'rounded'
 -- opt.cursorline = true
 -- opt.colorcolumn=90
+
+opt.colorcolumn = "79"
 
 opt.fillchars = { fold = " " }
 opt.foldmethod = "indent"
@@ -59,6 +61,19 @@ if utils.im_on_windows() then
 end
 
 vim.opt.shortmess:append({ I = true, c = false, F = false })
+
+-- Ignore compiled files
+opt.wildignore = "__pycache__"
+opt.wildignore:append({ "*.o", "*~", "*.pyc", "*pycache*" })
+opt.wildignore:append("Cargo.lock")
+opt.wildignore:append("**/node_modules/*")
+opt.wildignore:append("**/.git/*")
+
+opt.path:remove("/usr/include")
+opt.path:append("**")
+opt.whichwrap:append("<>[]hl")
+opt.shortmess:append("sI")
+
 -- NOTE: tenho a opção com e sem brew
 local shell =
   string.format("bash --rcfile %s/bashrc", vim.fn.stdpath("config"))
@@ -80,10 +95,72 @@ ensure_dir(config .. "/backup")
 ensure_dir(config .. "/tmp")
 ensure_dir(config .. "/undo")
 
+vim.g.loaded_matchparen = 1
+vim.g.omni_sql_default_compl_type = "syntax"
+vim.g.netrw_banner = 0
+vim.g.netrw_winsize = 25
+vim.g.python2_host_prog = "/home/ivan/.pyenv/versions/2.7.18/bin/python"
+vim.g.python3_host_prog = "/home/ivan/.pyenv/versions/3.10.15/bin/python"
+vim.g.python_host_prog = "/home/ivan/.pyenv/versions/3.10.15/bin/python"
+vim.g.perl_host_prog = "/home/linuxbrew/.linuxbrew/bin/perl"
+-- NOTE: aparentimente a linha de baixo deve se manter ativa conforme
+-- checkhealth
+vim.g.loaded_perl_provider = 0
+
+vim.g.ruby_host_prog = "/home/ivan/.rbenv/versions/3.3.5/bin/neovim-ruby-host"
+vim.env.PYENV_VERSION = vim.fn.system("pyenv version"):match("(%S+)%s+%(.-%)")
+
 vim.api.nvim_set_hl(0, "DiagnosticUnnecessary", {})
 
 -- vim.opt.autoread = true
 
+-- Disable some builtin vim plugins
+local disabled_built_ins = {
+  "2html_plugin",
+  "getscript",
+  "getscriptPlugin",
+  "gzip",
+  "logipat",
+  -- "netrw",
+  -- "netrwPlugin",
+  -- "netrwSettings",
+  -- "netrwFileHandlers",
+  "matchit",
+  "matchparen",
+  "tar",
+  "tarPlugin",
+  "rrhelper",
+  "vimball",
+  "vimballPlugin",
+  "zip",
+  "zipPlugin",
+}
+
+for _, plugin in pairs(disabled_built_ins) do
+  vim.g["loaded_" .. plugin] = 1
+end
+
+-- ---------------------------------------------------------------------------
+-- copy and paste
+-- ---------------------------------------------------------------------------
+
+vim.opt.clipboard:append("unnamedplus")
+
+vim.g.clipboard = {
+  name = "xclip",
+
+  copy = {
+    ["+"] = { "xclip", "-in", "-selection", "clipboard" },
+    ["*"] = { "xclip", "-in", "-selection", "primary" },
+  },
+
+  paste = {
+    ["+"] = { "xclip", "-out", "-selection", "clipboard" },
+    ["*"] = { "xclip", "-out", "-selection", "primary" },
+  },
+
+  cache_enabled = 1,
+}
 -- -----------------------------------------------------------------------------
 -- Comandos personalizados
 -- -----------------------------------------------------------------------------
@@ -94,7 +171,7 @@ vim.api.nvim_set_hl(0, "DiagnosticUnnecessary", {})
 -- require("config.command.a_cursor")
 -- require("config.command.a_macros")
 -- require("config.command.a_preview")
--- require("config.command.a_qclose")
+require("config.command.a_qclose")
 -- require("config.command.a_scratch")
 -- require("config.command.a_skell")
 require("config.command.a_spell")
