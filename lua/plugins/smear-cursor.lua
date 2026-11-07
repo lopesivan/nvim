@@ -1,5 +1,5 @@
 return {
-  enabled = true,
+  enabled = false,
   "sphamba/smear-cursor.nvim",
   opts = {
     smear_between_buffers = true,
