@@ -28,7 +28,12 @@ function M.get_csproj_name()
 end
 
 function M.get_dll_path(project_name)
-  local dll_path = vim.fn.getcwd() .. "/" .. project_name .. "/bin/Debug/net8.0/" .. project_name .. ".dll"
+  local dll_path = vim.fn.getcwd()
+    .. "/"
+    .. project_name
+    .. "/bin/Debug/net8.0/"
+    .. project_name
+    .. ".dll"
 
   return dll_path
 end
@@ -60,14 +65,15 @@ end
 
 function M.get_lua_debugger()
   local data_path = vim.fn.stdpath("data")
-  local file_path = "/mason/packages/local-lua-debugger-vscode/extension/extension/debugAdapter.js"
+  local file_path =
+    "/mason/packages/local-lua-debugger-vscode/extension/extension/debugAdapter.js"
 
   return data_path .. file_path
 end
 
 function M.get_jdtls_location()
   local data_path = vim.fn.stdpath("data")
-  local file_path = "/mason/packages/jdtls/bin/jdtls";
+  local file_path = "/mason/packages/jdtls/bin/jdtls"
 
   print("jdtls " .. data_path .. file_path)
   return data_path .. file_path
@@ -95,18 +101,18 @@ function M.get_codelldb()
 end
 
 function M.find_file(callback)
-  local fzf = require('fzf-lua');
+  local fzf = require("fzf-lua")
   fzf.files({
     git_icons = false,
     file_icons = false,
-    prompt = 'Select File: ',
+    prompt = "Select File: ",
     cmd = "find",
     actions = {
-      ['default'] = function(selected)
+      ["default"] = function(selected)
         local file = vim.fn.getcwd() .. "/" .. selected[1]
         callback(file)
-      end
-    }
+      end,
+    },
   })
 end
 
@@ -133,9 +139,25 @@ function M.configure_debug_assembly(callback)
     return
   end
 
-  if vim.fn.confirm('Change debug assembly?\n' .. assembly, '&yes\n&no', 2) == 1 then
+  if
+    vim.fn.confirm("Change debug assembly?\n" .. assembly, "&yes\n&no", 2)
+    == 1
+  then
     askFile()
   end
+end
+function M.pick_binary()
+  local default = vim.fn.getcwd() .. "/build/"
+  local path = vim.fn.input("Binário: ", default, "file")
+  if path == "" then
+    return nil
+  end
+  return path
+end
+
+function M.prompt_args()
+  local input = vim.fn.input("Args: ")
+  return require("dap.utils").splitstr(input)
 end
 
 return M
