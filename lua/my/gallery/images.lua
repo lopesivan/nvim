@@ -4,7 +4,7 @@ local run = vim.async.run
 local async = vim.async
 local fs = vim.fs
 
-local folder = "/home/ricardo/dev/test-images/"
+local folder = "/home/ivan/work/test-images/"
 local images = {}
 local images_in_row = 25
 local w = 5
