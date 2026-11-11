@@ -2,7 +2,7 @@ return {
   {
     "folke/tokyonight.nvim",
     lazy = false,
-    enabled = false,
+    enabled = true,
     priority = 1000,
     config = function()
       local tokyo = require("tokyonight")
@@ -14,23 +14,76 @@ return {
         },
         on_highlights = function(hl, c)
           hl["@lsp.code.unused"] = { fg = c.comment, italic = true }
-        end
+        end,
       })
       -- vim.cmd.colorscheme("tokyonight")
       -- vim.cmd.colorscheme("tokyonight-night")
-      vim.cmd.colorscheme("tokyonight-storm")
-      -- vim.cmd.colorscheme("tokyonight-moon")
+      -- vim.cmd.colorscheme("tokyonight-storm")
+      vim.cmd.colorscheme("tokyonight-moon")
       -- vim.cmd.colorscheme("tokyonight-day")
 
       -- Transparent background fix
       vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
       vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
       vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+
+      vim.opt.termguicolors = true
+      local Color = require("colorbuddy.init").Color
+      local colors = require("colorbuddy.init").colors
+      local Group = require("colorbuddy.init").Group
+      local groups = require("colorbuddy.init").groups
+      local styles = require("colorbuddy.init").styles
+
+      Color.new("red", "#cc6666")
+      Color.new("green", "#99cc99")
+      Color.new("yellow", "#FFFF00")
+      Color.new("black", "#000000")
+      Color.new("background", "#1d1f21")
+      Color.new("yellow_match_paren", "#d7ff00")
+      Color.new("folded_bg", "#3b4261")
+
+      -- Group.new("Function", colors.yellow, colors.background, styles.bold)
+      -- Group.new("mFunction", groups.Function, groups.Function, groups.Function)
+      -- -- original:
+      -- -- Folded        xxx guifg=#7aa2f7 guibg=#3b4261
+      -- Group.new("Folded", colors.yellow, colors.folded_bg, nil)
+      -- Group.new("FoldColumn", colors.yellow, colors.folded_bg, nil)
+      -- -- Group.new(
+      -- --   "Comment",
+      -- --   colors.yellow,
+      -- --   colors.folded_bg,
+      -- --   styles.bold + styles.italic
+      -- -- )
+      --
+      -- -- Group.new("Comment", colors.yellow, colors.background, nil)
+      -- -- Group.new("Comment", colors.yellow_match_paren, colors.background, nil)
+      -- -- Group.new("Visual", colors.background, colors.yellow_match_paren, styles.bold)
+      --
+      -- -- If you want multiple styles, just add them!
+      -- Group.new(
+      --   "italicBoldFunction",
+      --   groups.Function,
+      --   colors.background,
+      --   styles.bold + styles.italic
+      -- )
+      --
+      -- -- If you want the same style as a different group, but without a style
+      -- -- just subtract it!
+      -- Group.new(
+      --   "boldFunction",
+      --   colors.yellow,
+      --   colors.yellow,
+      --   groups.italicBoldFunction - styles.italic
+      -- )
+      --
+      Group.new("ColorColumn", nil, colors.DarkRed, nil)
+      Group.new("Visual", colors.black, colors.yellow, styles.bold)
+      Group.new("LineNr", nil, colors.background, nil)
     end,
   },
   {
     "catppuccin/nvim",
-    enabled = true,
+    enabled = false,
     lazy = false,
     name = "catppuccin",
     priority = 1000,
@@ -38,26 +91,26 @@ return {
       local catpuccin = require("catppuccin")
       catpuccin.setup({
         flavour = "mocha",
-        transparent_background = true
+        transparent_background = true,
       })
 
       vim.cmd("colorscheme catppuccin-mocha")
-    end
+    end,
   },
   {
     "EdenEast/nightfox.nvim",
     enabled = false,
     lazy = false,
     config = function()
-      local nightfox = require("nightfox");
+      local nightfox = require("nightfox")
       nightfox.setup({
         options = {
-          transparent = true
-        }
+          transparent = true,
+        },
       })
 
       vim.cmd("colorscheme duskfox")
-    end
+    end,
   },
 
   {
@@ -68,11 +121,11 @@ return {
     config = function()
       require("cyberdream").setup({
         variant = "dark",
-        transparent = true
-      });
+        transparent = true,
+      })
 
       vim.cmd("colorscheme cyberdream")
-    end
+    end,
   },
   -- Using Lazy
   {
@@ -80,19 +133,19 @@ return {
     enabled = false,
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      require('onedark').setup {
-        style = 'deep'
-      }
+      require("onedark").setup({
+        style = "deep",
+      })
       -- Enable theme
-      require('onedark').load()
-    end
+      require("onedark").load()
+    end,
   },
   {
-    'nyngwang/nvimgelion',
+    "nyngwang/nvimgelion",
     enabled = false,
     config = function()
       -- do whatever you want for further customization~
-    end
+    end,
   },
   {
     "rose-pine/neovim",
@@ -102,34 +155,34 @@ return {
       local rose = require("rose-pine")
       rose.setup({
         styles = {
-          transparency = true
-        }
+          transparency = true,
+        },
       })
 
       vim.cmd("colorscheme rose-pine")
-    end
+    end,
   },
   {
     "rebelot/kanagawa.nvim",
     enabled = false,
     config = function()
-      local kanagawa = require("kanagawa");
+      local kanagawa = require("kanagawa")
       kanagawa.setup({
         theme = "wave",
-        transparent = true
+        transparent = true,
       })
 
       vim.o.background = "dark"
       -- vim.o.background = "light"
       vim.cmd("colorscheme kanagawa")
-    end
+    end,
   },
   {
     "cpea2506/one_monokai.nvim",
-    enabled = false
+    enabled = false,
   },
   {
-    'sainnhe/gruvbox-material',
+    "sainnhe/gruvbox-material",
     enabled = false,
     lazy = false,
     priority = 1000,
@@ -140,38 +193,37 @@ return {
       vim.g.gruvbox_material_enable_italic = 1
       vim.g.gruvbox_material_better_performance = 1
       vim.o.background = "dark"
-      vim.cmd.colorscheme('gruvbox-material')
-    end
+      vim.cmd.colorscheme("gruvbox-material")
+    end,
   },
 
   {
     "Tsuzat/NeoSolarized.nvim",
     enabled = false,
-    lazy = true,     -- make sure we load this during startup if it is your main colorscheme
+    lazy = true, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       local neo = require("NeoSolarized")
       neo.setup({
         style = "dark",
-        transparent = true
-
+        transparent = true,
       })
       vim.cmd("colorscheme NeoSolarized")
-    end
+    end,
   },
   {
     "daschw/leaf.nvim",
     enabled = false,
     config = function()
-      local leaf = require("leaf");
+      local leaf = require("leaf")
 
       leaf.setup({
         contrast = "high",
-        transparent = true
+        transparent = true,
       })
 
       vim.cmd("colorscheme leaf")
-    end
+    end,
   },
   {
     "bluz71/vim-moonfly-colors",
@@ -182,41 +234,40 @@ return {
     config = function()
       vim.g.moonflyTransparent = true
       vim.cmd("colorscheme moonfly")
-    end
+    end,
   },
 
-
   {
-    'projekt0n/github-nvim-theme',
-    name = 'github-theme',
+    "projekt0n/github-nvim-theme",
+    name = "github-theme",
     enabled = false,
-    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      require('github-theme').setup({
+      require("github-theme").setup({
         options = {
-          transparent = true
-        }
+          transparent = true,
+        },
       })
     end,
   },
   {
-    'marko-cerovac/material.nvim',
+    "marko-cerovac/material.nvim",
     enabled = false,
     config = function()
       local material = require("material")
       material.setup({
         disable = {
           colored_cursor = false, -- Disable the colored cursor
-          borders = false,        -- Disable borders between vertically split windows
-          background = true,      -- Prevent the theme from setting the background (NeoVim then uses your terminal background)
-          term_colors = false,    -- Prevent the theme from setting terminal colors
-          eob_lines = false       -- Hide the end-of-buffer lines
-        }
-      });
+          borders = false, -- Disable borders between vertically split windows
+          background = true, -- Prevent the theme from setting the background (NeoVim then uses your terminal background)
+          term_colors = false, -- Prevent the theme from setting terminal colors
+          eob_lines = false, -- Hide the end-of-buffer lines
+        },
+      })
       --Lua:
       vim.g.material_style = "lighter"
-    end
+    end,
   },
 
   {
@@ -225,7 +276,7 @@ return {
     config = function()
       require("oldworld").setup({})
       vim.cmd("colorscheme oldworld")
-    end
+    end,
   },
   {
     "vague-theme/vague.nvim",
@@ -236,34 +287,33 @@ return {
         -- optional configuration here
       })
       vim.cmd("colorscheme vague")
-    end
+    end,
   },
   {
-    'Mofiqul/vscode.nvim',
+    "Mofiqul/vscode.nvim",
     enabled = false,
     config = function()
-      local vscode = require("vscode");
-      vscode.setup();
+      local vscode = require("vscode")
+      vscode.setup()
       vim.o.background = "light"
-    end
+    end,
   },
   {
-    'maxmx03/fluoromachine.nvim',
+    "maxmx03/fluoromachine.nvim",
     enabled = false,
     lazy = false,
     priority = 1000,
     config = function()
-      local fm = require 'fluoromachine'
+      local fm = require("fluoromachine")
 
-      fm.setup {
+      fm.setup({
         glow = true,
-        theme = 'retrowave',
+        theme = "retrowave",
         transparent = true,
-      }
+      })
 
-
-      vim.cmd("colorscheme fluoromachine");
-    end
+      vim.cmd("colorscheme fluoromachine")
+    end,
   },
   {
     "eldritch-theme/eldritch.nvim",
@@ -272,20 +322,20 @@ return {
     priority = 1000,
     opts = {},
     config = function()
-      local eldritch = require("eldritch");
+      local eldritch = require("eldritch")
 
       eldritch.setup({
-        transparent = true
+        transparent = true,
       })
 
       vim.cmd("colorscheme eldritch")
-    end
+    end,
   },
   {
     "tiagovla/tokyodark.nvim",
     enabled = false,
     opts = {
-      transparent_background = true
+      transparent_background = true,
     },
     config = function(_, opts)
       require("tokyodark").setup(opts) -- calling setup is optional
@@ -303,7 +353,7 @@ return {
       -- Lua initialization file
       vim.g.nightflyTransparent = true
       vim.cmd("colorscheme nightfly")
-    end
+    end,
   },
   {
     "samharju/synthweave.nvim",
@@ -314,7 +364,7 @@ return {
       -- vim.cmd.colorscheme("synthweave")
       -- transparent version
       -- vim.cmd.colorscheme("synthweave-transparent")
-    end
+    end,
   },
 
   {
@@ -324,8 +374,8 @@ return {
     priority = 1000,
     config = function()
       require("everforest").setup({
-      transparent_background_level = 0,
-        background = "hard"
+        transparent_background_level = 0,
+        background = "hard",
       })
       vim.cmd("colorscheme everforest")
     end,
@@ -337,11 +387,11 @@ return {
   },
   {
     "Mofiqul/dracula.nvim",
-    enabled = false
+    enabled = false,
   },
   {
     "shaunsingh/nord.nvim",
-    enabled = false
+    enabled = false,
   },
   {
     "nyoom-engineering/oxocarbon.nvim",
@@ -358,62 +408,61 @@ return {
     priority = 1000,
     config = function()
       vim.cmd("colorscheme solarized-osaka")
-    end
+    end,
   },
   {
-    'AlexvZyl/nordic.nvim',
+    "AlexvZyl/nordic.nvim",
     enabled = false,
     lazy = false,
     priority = 1000,
     config = function()
-      require('nordic').load()
-    end
+      require("nordic").load()
+    end,
   },
   {
-    'sainnhe/edge',
+    "sainnhe/edge",
     enabled = false,
     lazy = false,
     priority = 1000,
     config = function()
       vim.g.edge_enable_italic = true
       vim.o.background = "light"
-    end
+    end,
   },
   {
     "savq/melange-nvim",
     enabled = false,
     config = function()
       vim.cmd("colorscheme melange")
-    end
+    end,
   },
   -- Using lazy.nvim
   {
-    'ribru17/bamboo.nvim',
+    "ribru17/bamboo.nvim",
     enabled = false,
     lazy = false,
     priority = 1000,
     config = function()
-      require('bamboo').setup {
+      require("bamboo").setup({
         transparent = true,
-        style = "light"
-      }
-      require('bamboo').load()
+        style = "light",
+      })
+      require("bamboo").load()
     end,
   },
   {
-    'rmehri01/onenord.nvim',
+    "rmehri01/onenord.nvim",
     enabled = false,
     config = function()
-      require('lualine').setup {
+      require("lualine").setup({
 
         options = {
-          theme = 'onenord'
-        }
-
-      }
+          theme = "onenord",
+        },
+      })
       vim.o.background = "dark"
       vim.cmd("colorscheme onenord")
-    end
+    end,
   },
   {
     "zenbones-theme/zenbones.nvim",
@@ -427,7 +476,7 @@ return {
       vim.o.background = "dark"
 
       vim.cmd("colorscheme tokyobones")
-    end
+    end,
   },
   {
     "miikanissi/modus-themes.nvim",
@@ -435,8 +484,7 @@ return {
     enabled = false,
     config = function()
       vim.o.background = "light"
-    end
-
+    end,
   },
   {
     "ramojus/mellifluous.nvim",
@@ -447,18 +495,18 @@ return {
     end,
   },
   {
-    'uloco/bluloco.nvim',
+    "uloco/bluloco.nvim",
     enabled = false,
     lazy = false,
     priority = 1000,
-    dependencies = { 'rktjmp/lush.nvim' },
+    dependencies = { "rktjmp/lush.nvim" },
     config = function()
       vim.cmd("colorscheme bluloco")
     end,
   },
   -- lazy
   {
-    'ray-x/aurora',
+    "ray-x/aurora",
     enabled = false,
     init = function()
       vim.g.aurora_italic = 1
@@ -466,45 +514,45 @@ return {
       vim.g.aurora_bold = 1
     end,
     config = function()
-      vim.cmd.colorscheme "aurora"
+      vim.cmd.colorscheme("aurora")
       -- override defaults
-      vim.api.nvim_set_hl(0, '@number', { fg = '#e933e3' })
-    end
+      vim.api.nvim_set_hl(0, "@number", { fg = "#e933e3" })
+    end,
   },
   {
     "oxfist/night-owl.nvim",
     enabled = false,
-    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       -- load the colorscheme here
       require("night-owl").setup({
-        transparent_background = true
+        transparent_background = true,
       })
       vim.cmd.colorscheme("night-owl")
     end,
   },
 
   {
-    'Everblush/nvim',
+    "Everblush/nvim",
     enabled = false,
-    name = 'everblush',
+    name = "everblush",
     config = function()
       local everblush = require("everblush")
       everblush.setup({
-        transparent_background = true
+        transparent_background = true,
       })
       vim.cmd.colorscheme("everblush")
-    end
+    end,
   },
   {
-    'shaunsingh/moonlight.nvim',
+    "shaunsingh/moonlight.nvim",
     enabled = false,
     config = function()
       local moon = require("moonlight")
       vim.g.moonlight_disable_background = true
       moon.set()
-    end
+    end,
   },
   {
     "rjshkhr/shadow.nvim",
@@ -519,11 +567,11 @@ return {
     enabled = false,
     "tanmaymanojgandhi/circadia",
     rtp = "ports/neovim",
-    opts = {}
+    opts = {},
   },
   {
     "harshrajsachan/omni.nvim",
-    lazy = false,    -- load during startup if OmniTheme is your main colorscheme
+    lazy = false, -- load during startup if OmniTheme is your main colorscheme
     priority = 1000, -- load before other start plugins
 
     config = function()
@@ -538,5 +586,5 @@ return {
       -- vim.cmd("colorscheme blackout")
       vim.g.omnitheme_transparent = true
     end,
-  }
+  },
 }
