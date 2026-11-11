@@ -5,6 +5,10 @@ opt.hlsearch = true
 opt.expandtab = true
 opt.shiftwidth = 2
 
+opt.cursorline = true
+opt.cursorcolumn = true
+opt.cursorlineopt = "both" -- line + number: "both" | "line" | "number"
+
 opt.wrap = true
 opt.tabstop = 4
 opt.shiftwidth = 4
@@ -168,7 +172,7 @@ vim.g.clipboard = {
 -- require("config.command.a_listurls")
 -- require("config.command.a_checklinks")
 -- require("config.command.a_coderunner")
--- require("config.command.a_cursor")
+require("config.command.a_cursor")
 -- require("config.command.a_macros")
 -- require("config.command.a_preview")
 require("config.command.a_qclose")
