@@ -1,18 +1,16 @@
 return {
   "seblyng/roslyn.nvim",
-  enabled = false,
+  enabled = true,
   ft = "cs",
   config = function()
     vim.lsp.config("roslyn", {
       on_attach = function()
         print("This will run when the server attaches!")
       end,
-      settings = {
-      },
-
+      settings = {},
     })
-    local roslyn = require("roslyn");
-    roslyn.setup();
+    local roslyn = require("roslyn")
+    roslyn.setup()
 
     vim.api.nvim_create_autocmd({ "InsertLeave" }, {
       pattern = "*",
@@ -29,7 +27,5 @@ return {
         -- print("Client refresh ")
       end,
     })
-  end
-
-
+  end,
 }
