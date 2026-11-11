@@ -1,5 +1,5 @@
 vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
-  group = vim.api.nvim_create_augroup("pde_cursorline", { clear = true }),
+  group = vim.api.nvim_create_augroup("nvim_cursorline", { clear = true }),
   callback = function()
     vim.opt_local.cursorline = true
   end,
