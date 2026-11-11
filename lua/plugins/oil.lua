@@ -1,5 +1,5 @@
 return {
-  'stevearc/oil.nvim',
+  "stevearc/oil.nvim",
   enabled = false,
   ---@module 'oil'
   ---@type oil.SetupOpts
@@ -9,19 +9,24 @@ return {
   config = function()
     local oil = require("oil")
     oil.setup({
-       view_options = {
+      view_options = {
         show_hidden = true,
-       },
+      },
       default_file_explorer = true,
     })
-    vim.api.nvim_set_keymap('n', 'te', ":Oil<CR>", { noremap = true, silent = true })
+    vim.api.nvim_set_keymap(
+      "n",
+      "te",
+      ":Oil<CR>",
+      { noremap = true, silent = true }
+    )
 
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "oil",
       callback = function()
-        vim.opt_local.number = true         -- show absolute number
+        vim.opt_local.number = true -- show absolute number
         vim.opt_local.relativenumber = true -- enable relative numbers
       end,
     })
-  end
+  end,
 }
