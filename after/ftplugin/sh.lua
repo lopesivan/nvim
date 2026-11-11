@@ -1,0 +1,54 @@
+local set = vim.opt_local
+set.tabstop = 4
+set.softtabstop = 4
+set.shiftwidth = 4
+set.textwidth = 78
+
+set.expandtab = true
+set.wrap = false
+set.smartcase = true
+set.infercase = true
+
+set.commentstring = "# %s"
+set.foldtext = "getline(v:foldstart)"
+
+--# Surround
+
+-- word
+-- ^^^^
+-- v select + S + p
+vim.b["surround_" .. vim.fn.char2nr("p")] = "${\r}"
+vim.fn.setreg("a", "veSp")
+
+--# Map
+vim.keymap.set("n", "<leader>xe", function()
+  local file = vim.fn.expand("%:p") -- Caminho completo do arquivo atual
+  if vim.fn.filereadable(file) == 1 then
+    vim.fn.system({ "chmod", "+x", file })
+    print("Arquivo tornou-se executável: " .. file)
+  else
+    print("Arquivo não encontrado ou não legível.")
+  end
+end, { desc = "Tornar arquivo executável com chmod +x" })
+
+--# Setup projectionist
+vim.g.projectionist_heuristics = {
+  ["*.sh"] = {
+    ["*.sh"] = {
+      ["dispatch"] = "bash {file}",
+      ["make"] = "bash {file}",
+      -- roda o arquivo salvo
+      ["run"] = "lua require('my.neovim_dev').sh({'{file}'})",
+      -- roda o que estiver definido em yabs.lua "sh"
+      -- roda o buffer
+      ["yabs"] = "run",
+      ["type"] = "sh",
+    },
+  },
+}
+
+local nmap = require("my.dispatch").nmap
+nmap({ "<leader><CR>", "run", "nvim_dev Run", "run with sh" })
+nmap({ "r<CR>", "yabs", "Run", "yabs Run" })
+-- nmap { "m<CR>", "make", "Make" }
+nmap({ "d<CR>", "dispatch", "Dispatch", "executar/encaminhar asinc bash" })
