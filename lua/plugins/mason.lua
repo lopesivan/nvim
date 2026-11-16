@@ -53,6 +53,7 @@ return {
         ensure_installed = {
           "glsl_analyzer",
           "autopep8",
+          "json-lsp",
           "bash-debug-adapter",
           "black",
           "clangd",
