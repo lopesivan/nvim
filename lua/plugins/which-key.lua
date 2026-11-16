@@ -11,6 +11,23 @@ return {
       show_help = true,
       show_keys = true,
       notify = false,
+      triggers = {
+        { "<leader>", mode = { "n", "v" } },
+        { "g", mode = { "n", "v" } },
+        { "z", mode = { "n", "v" } },
+        { "]", mode = { "n", "v" } },
+        { "[", mode = { "n", "v" } },
+        { "<c-w>", mode = "n" },
+        { '"', mode = { "n", "v" } },
+        { "'", mode = { "n", "v" } },
+        { "`", mode = { "n", "v" } },
+        { "d", mode = { "n", "v" } },
+        { "y", mode = { "n", "v" } },
+        { "c", mode = { "n", "v" } },
+        { "<", mode = { "n", "v" } },
+        { ">", mode = { "n", "v" } },
+        -- sem "=" aqui
+      },
       icons = {
         mappings = false,
         rules = false,
