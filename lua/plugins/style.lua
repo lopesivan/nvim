@@ -9,77 +9,70 @@ return {
     enabled = true,
     priority = 1000,
     config = function()
-      local tokyo = require("tokyonight")
-      tokyo.setup({
-        transparent = true,
+      -- local bg = "#1d1f21" -- <<< sua cor de fundo
+      -- Neutros / grafite
+      -- local bg = "#1d1f21" -- atual (grafite)
+      -- local bg = "#121212" -- quase preto (Material)
+      -- local bg = "#0d0d0d" -- preto suave
+      -- local bg = "#1a1a1a" -- cinza carvão
+      -- local bg = "#202020" -- cinza escuro
+
+      -- Azulados
+      -- local bg = "#1a1b26" -- tokyonight night
+      -- local bg = "#222436" -- tokyonight moon (padrão)
+      -- local bg = "#24283b" -- tokyonight storm
+      -- local bg = "#0f111a" -- azul-noite profundo
+      -- local bg = "#0b1020" -- azul marinho escuro
+      -- local bg = "#1e2030" -- azul acinzentado
+      -- local bg = "#002b36" -- solarized dark
+
+      -- Esverdeados
+      -- local bg = "#0f1a14" -- verde floresta escuro
+      -- local bg = "#1b2b24" -- verde musgo
+      -- local bg = "#1e2326" -- everforest hard
+      -- local bg = "#102020" -- verde-azulado escuro
+
+      -- Arroxeados
+      -- local bg = "#1a1626" -- roxo noite
+      -- local bg = "#1e1a2e" -- ameixa escura
+      -- local bg = "#2a2139" -- synthwave
+      local bg = "#282a36" -- dracula
+
+      -- Avermelhados / quentes
+      -- local bg = "#1f1a1a" -- marrom-avermelhado escuro
+      -- local bg = "#241b1b" -- vinho escuro
+      -- local bg = "#282828" -- gruvbox
+      -- local bg = "#1d2021" -- gruvbox hard
+      -- local bg = "#2b2420" -- café escuro
+      require("tokyonight").setup({
+        transparent = false,
         styles = {
-          sidebars = "transparent",
-          floats = "transparent",
+          sidebars = "dark",
+          floats = "dark",
         },
+        on_colors = function(c)
+          c.bg = bg
+          c.bg_dark = bg
+          c.bg_float = bg
+          c.bg_sidebar = bg
+          c.bg_statusline = bg
+        end,
         on_highlights = function(hl, c)
           hl["@lsp.code.unused"] = { fg = c.comment, italic = true }
         end,
       })
-      -- vim.cmd.colorscheme("tokyonight")
-      -- vim.cmd.colorscheme("tokyonight-night")
-      -- vim.cmd.colorscheme("tokyonight-storm")
-      vim.cmd.colorscheme("tokyonight-moon")
-      -- vim.cmd.colorscheme("tokyonight-day")
 
-      -- Transparent background fix
-      vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-      vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
-      vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+      vim.cmd.colorscheme("tokyonight-moon")
 
       vim.opt.termguicolors = true
-      local Color = require("colorbuddy.init").Color
-      local colors = require("colorbuddy.init").colors
-      local Group = require("colorbuddy.init").Group
-      local groups = require("colorbuddy.init").groups
-      local styles = require("colorbuddy.init").styles
+      local cb = require("colorbuddy.init")
+      local Color, colors, Group, styles =
+        cb.Color, cb.colors, cb.Group, cb.styles
 
-      Color.new("red", "#cc6666")
-      Color.new("green", "#99cc99")
-      Color.new("yellow", "#FFFF00")
       Color.new("black", "#000000")
-      Color.new("background", "#1d1f21")
-      Color.new("yellow_match_paren", "#d7ff00")
-      Color.new("folded_bg", "#3b4261")
+      Color.new("yellow", "#FFFF00")
+      Color.new("background", bg)
 
-      -- Group.new("Function", colors.yellow, colors.background, styles.bold)
-      -- Group.new("mFunction", groups.Function, groups.Function, groups.Function)
-      -- -- original:
-      -- -- Folded        xxx guifg=#7aa2f7 guibg=#3b4261
-      -- Group.new("Folded", colors.yellow, colors.folded_bg, nil)
-      -- Group.new("FoldColumn", colors.yellow, colors.folded_bg, nil)
-      -- -- Group.new(
-      -- --   "Comment",
-      -- --   colors.yellow,
-      -- --   colors.folded_bg,
-      -- --   styles.bold + styles.italic
-      -- -- )
-      --
-      -- -- Group.new("Comment", colors.yellow, colors.background, nil)
-      -- -- Group.new("Comment", colors.yellow_match_paren, colors.background, nil)
-      -- -- Group.new("Visual", colors.background, colors.yellow_match_paren, styles.bold)
-      --
-      -- -- If you want multiple styles, just add them!
-      -- Group.new(
-      --   "italicBoldFunction",
-      --   groups.Function,
-      --   colors.background,
-      --   styles.bold + styles.italic
-      -- )
-      --
-      -- -- If you want the same style as a different group, but without a style
-      -- -- just subtract it!
-      -- Group.new(
-      --   "boldFunction",
-      --   colors.yellow,
-      --   colors.yellow,
-      --   groups.italicBoldFunction - styles.italic
-      -- )
-      --
       Group.new("ColorColumn", nil, colors.DarkRed, nil)
       Group.new("Visual", colors.black, colors.yellow, styles.bold)
       Group.new("LineNr", nil, colors.background, nil)
