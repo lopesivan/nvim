@@ -17,7 +17,7 @@ vim.api.nvim_set_keymap(
 )
 -- vim.api.nvim_set_keymap('i', '<C-BS>', '<C-W>', { noremap = true, silent = true })
 --ctrl + A select all
-vim.api.nvim_set_keymap("n", "<C-a>", "ggVG<CR>", options)
+-- vim.api.nvim_set_keymap("n", "<C-a>", "ggVG<CR>", options)
 
 -- alt + z and x to <>
 vim.api.nvim_set_keymap("i", "<A-z>", "<", { noremap = true, silent = true })
@@ -117,5 +117,35 @@ map.set(
 vim.keymap.set("n", "<Leader>z", "<C-z>", { noremap = true, silent = true })
 
 --terminal insert to normal mode
-vim.keymap.set("t", "<esc><esc>", "<C-\\><C-n>", { silent = true })
-vim.keymap.set("n", "<Leader>cm", "<C-l>", {})
+--vim.keymap.set("t", "<esc><esc>", "<C-\\><C-n>", { silent = true })
+--vim.keymap.set("n", "<Leader>cm", "<C-l>", {})
+
+vim.keymap.set("n", "<A-x>", function()
+  local file = vim.api.nvim_buf_get_name(0)
+  local stat = file ~= "" and vim.uv.fs_stat(file)
+  if not stat then
+    return vim.notify(
+      "Arquivo não existe em disco (salve antes)",
+      vim.log.levels.WARN
+    )
+  end
+
+  local mode = stat.mode % 4096 -- só bits de permissão
+  local is_exec = bit.band(mode, 0x49) ~= 0 -- 0111
+
+  local new, msg
+  if is_exec then
+    new = bit.band(mode, bit.bnot(0x49)) -- remove x (chmod -x)
+    msg = "chmod -x: "
+  else
+    new = bit.bor(mode, bit.rshift(bit.band(mode, 0x124), 2)) -- 0444 -> 0111
+    msg = "chmod +x: "
+  end
+
+  local ok, err = vim.uv.fs_chmod(file, new)
+  if ok then
+    vim.notify(msg .. vim.fn.fnamemodify(file, ":~"))
+  else
+    vim.notify("Falha no chmod: " .. tostring(err), vim.log.levels.ERROR)
+  end
+end, { desc = "Alterna executável (chmod +x / -x)" })
