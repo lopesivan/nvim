@@ -6,6 +6,7 @@ local M = {}
 
 M.autoformat = true
 M.format_notify = false
+M.notify_on_format = true
 
 M.opts = {
   timeout_ms = 3000,
@@ -13,16 +14,23 @@ M.opts = {
 
 function M.toggle()
   M.autoformat = not M.autoformat
-  vim.notify(M.autoformat and "Format on save: ON" or "Format on save: OFF")
+
+  vim.notify(
+    M.autoformat and "Format on save: ON" or "Format on save: OFF",
+    vim.log.levels.INFO,
+    { title = "Formatting" }
+  )
 end
 
 local function supports(client, method, bufnr)
   if client.supports_method then
     local ok, res = pcall(client.supports_method, client, method, bufnr)
+
     if ok then
       return res
     end
   end
+
   return false
 end
 
@@ -30,6 +38,7 @@ function M.supports_format(client, bufnr)
   if not client then
     return false
   end
+
   return supports(client, "textDocument/formatting", bufnr)
     or supports(client, "textDocument/rangeFormatting", bufnr)
 end
@@ -37,12 +46,17 @@ end
 function M.get_formatters(bufnr)
   local ft = vim.bo[bufnr].filetype
   local null_ls = {}
+
   if package.loaded["null-ls"] then
     null_ls =
       require("null-ls.sources").get_available(ft, "NULL_LS_FORMATTING")
   end
 
-  local ret = { active = {}, available = {}, null_ls = null_ls }
+  local ret = {
+    active = {},
+    available = {},
+    null_ls = null_ls,
+  }
 
   for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
     if M.supports_format(client, bufnr) then
@@ -59,8 +73,10 @@ end
 
 function M.notify(formatters)
   local lines = { "Active:" }
+
   for _, client in ipairs(formatters.active) do
     local line = "- " .. client.name
+
     if client.name == "null-ls" and #formatters.null_ls > 0 then
       line = line
         .. " ("
@@ -72,20 +88,40 @@ function M.notify(formatters)
         )
         .. ")"
     end
+
     table.insert(lines, line)
   end
+
   if #formatters.available > 0 then
     table.insert(lines, "")
     table.insert(lines, "Disabled:")
+
     for _, client in ipairs(formatters.available) do
       table.insert(lines, "- " .. client.name)
     end
   end
+
   vim.notify(
     table.concat(lines, "\n"),
     vim.log.levels.INFO,
     { title = "Formatting" }
   )
+end
+
+local function formatter_names(formatters)
+  local names = {}
+
+  for _, client in ipairs(formatters.active) do
+    if client.name == "null-ls" and #formatters.null_ls > 0 then
+      for _, source in ipairs(formatters.null_ls) do
+        table.insert(names, source.name)
+      end
+    else
+      table.insert(names, client.name)
+    end
+  end
+
+  return table.concat(names, ", ")
 end
 
 --- @param range? { start: integer[], ["end"]: integer[] }
@@ -98,7 +134,11 @@ function M.format(range)
   end, formatters.active)
 
   if #ids == 0 then
-    vim.notify("Nenhum formatador LSP ativo", vim.log.levels.WARN)
+    vim.notify(
+      "Nenhum formatador LSP ativo",
+      vim.log.levels.WARN,
+      { title = "Formatting" }
+    )
     return
   end
 
@@ -106,7 +146,9 @@ function M.format(range)
     M.notify(formatters)
   end
 
-  vim.lsp.buf.format({
+  local changedtick = vim.api.nvim_buf_get_changedtick(buf)
+
+  local ok, err = pcall(vim.lsp.buf.format, {
     bufnr = buf,
     async = false,
     timeout_ms = M.opts.timeout_ms,
@@ -115,12 +157,55 @@ function M.format(range)
       return vim.tbl_contains(ids, client.id)
     end,
   })
+
+  if not ok then
+    vim.notify(
+      "Erro ao formatar: " .. tostring(err),
+      vim.log.levels.ERROR,
+      { title = "Formatting" }
+    )
+    return
+  end
+
+  if not M.notify_on_format then
+    return
+  end
+
+  local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t")
+
+  if filename == "" then
+    filename = "[No Name]"
+  end
+
+  local changed = vim.api.nvim_buf_get_changedtick(buf) ~= changedtick
+
+  local message
+
+  if changed then
+    message = string.format(
+      "Formatado: %s\nFormatador: %s",
+      filename,
+      formatter_names(formatters)
+    )
+  else
+    message = string.format(
+      "Sem alterações: %s\nFormatador: %s",
+      filename,
+      formatter_names(formatters)
+    )
+  end
+
+  vim.notify(message, vim.log.levels.INFO, { title = "Formatting" })
 end
 
 function M.format_visual()
   local s = vim.api.nvim_buf_get_mark(0, "<")
   local e = vim.api.nvim_buf_get_mark(0, ">")
-  M.format({ start = s, ["end"] = e })
+
+  M.format({
+    start = s,
+    ["end"] = e,
+  })
 end
 
 function M.on_attach(client, bufnr)
@@ -147,18 +232,21 @@ function M.setup()
     group = vim.api.nvim_create_augroup("BaseFormat", { clear = true }),
     callback = function(args)
       local client = vim.lsp.get_client_by_id(args.data.client_id)
+
       M.on_attach(client, args.buf)
     end,
   })
 
   vim.api.nvim_create_user_command("FormatToggle", M.toggle, {})
+
   vim.api.nvim_create_user_command("Format", function()
     M.format()
   end, {})
 
   vim.keymap.set("n", "ff", M.format, { desc = "Format" })
+
   vim.keymap.set("v", "ff", function()
-    vim.cmd("normal! \27") -- sai do visual para atualizar as marcas '< '>
+    vim.cmd("normal! \27")
     M.format_visual()
   end, { desc = "Format (range)" })
 end
