@@ -61,7 +61,7 @@ map.set("n", "rn", vim.lsp.buf.rename, options)
 map.set("n", "gr", vim.lsp.buf.references, options)
 map.set("n", "gd", vim.lsp.buf.definition, {})
 map.set("n", "gi", vim.lsp.buf.implementation, {})
-map.set("n", "<C-x>", vim.lsp.buf.code_action, options)
+map.set("n", "<F9>", vim.lsp.buf.code_action, options)
 map.set("n", "gt", vim.lsp.buf.document_symbol, options)
 
 -- go to definition split
@@ -122,8 +122,8 @@ vim.keymap.set("n", "<Leader>z", "<C-z>", { noremap = true, silent = true })
 
 -- ----------------------------------------------------------------------------
 -- to executable: chmod +x
-
-vim.keymap.set("n", "<A-x>", function()
+--vim.keymap.set({ "n", "i", "v" }, "<M-x>", "<Nop>")
+vim.keymap.set("n", "<m-x>", function()
   local file = vim.api.nvim_buf_get_name(0)
   local stat = file ~= "" and vim.uv.fs_stat(file)
   if not stat then
