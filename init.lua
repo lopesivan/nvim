@@ -30,5 +30,8 @@ vim.lsp.enable("marksman")
 vim.fn.setenv("DAP_LOG_LEVEL", "TRACE")
 vim.fn.setenv("DAP_LOG_FILE", vim.fn.stdpath("cache") .. "/dap.log")
 
+-- require("my.image_preview").setup()
+-- require("my.md-image").setup()
+
 -- vim.g.loaded_netrw = 1
 -- vim.g.loaded_netrwPlugin = 1
