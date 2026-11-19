@@ -36,7 +36,7 @@ return {
       -- local bg = "#1a1626" -- roxo noite
       -- local bg = "#1e1a2e" -- ameixa escura
       -- local bg = "#2a2139" -- synthwave
-      local bg = "#282a36" -- dracula
+      local bg = "#282a36" -- dracula <- MUITO BOM :)
 
       -- Avermelhados / quentes
       -- local bg = "#1f1a1a" -- marrom-avermelhado escuro
@@ -44,6 +44,9 @@ return {
       -- local bg = "#282828" -- gruvbox
       -- local bg = "#1d2021" -- gruvbox hard
       -- local bg = "#2b2420" -- café escuro
+
+      local code_bg = "#2a2d33" -- um pouco mais claro que o bg
+
       require("tokyonight").setup({
         transparent = false,
         styles = {
@@ -63,6 +66,19 @@ return {
       })
 
       vim.cmd.colorscheme("tokyonight-moon")
+
+      -- Markdow
+      local function md_code_hl()
+        vim.api.nvim_set_hl(0, "RenderMarkdownCode", { bg = code_bg })
+        vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { bg = code_bg })
+        vim.api.nvim_set_hl(0, "RenderMarkdownCodeBorder", { bg = code_bg })
+      end
+
+      md_code_hl()
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = md_code_hl,
+      })
+      --- markdown fim
 
       vim.opt.termguicolors = true
       local cb = require("colorbuddy.init")
