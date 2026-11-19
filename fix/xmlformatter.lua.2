@@ -1,0 +1,25 @@
+local h = require("null-ls.helpers")
+local methods = require("null-ls.methods")
+
+local FORMATTING = methods.internal.FORMATTING
+
+return h.make_builtin({
+    name = "xmlformat",
+    meta = {
+        url = "https://github.com/pamoller/xmlformat", -- ajuste para o fork/fonte que você usa
+        description = "Formatter para XML com opções de indentação e normalização.",
+    },
+    method = FORMATTING,
+    filetypes = { "xml", "xsd", "xsl", "xslt", "wsdl" },
+    generator_opts = {
+        command = "/home/ivan/.config/nvim-pde-local/mason/bin/xmlformat",
+        args = {
+            "--indent", "2", -- ajuste aqui se quiser 4
+            "--selfclose", -- opcional: converte tags vazias para <tag/>
+            "--eof-newline", -- garante newline no final do arquivo
+            "-",       -- lê de stdin
+        },
+        to_stdin = true,
+    },
+    factory = h.formatter_factory,
+})
