@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+JAVA_HOME="/home/ivan/.config/env/jenv/versions/21"
+JAR="/home/ivan/.local/share/nvim-pde/mason/packages/ktfmt/ktfmt-0.64-with-dependencies.jar"
+
+[[ -x "$JAVA_HOME/bin/java" ]] || {
+    echo "java não encontrado: $JAVA_HOME/bin/java" >&2
+    exit 1
+}
+[[ -f "$JAR" ]] || {
+    echo "jar não encontrado: $JAR" >&2
+    exit 1
+}
+
+exec "$JAVA_HOME/bin/java" -jar "$JAR" "$@"
+
