@@ -1,4 +1,7 @@
 -- ~/.config/nvim/lua/my/format.lua
+-- test
+-- :lua print(require("my.format").supports_format(vim.lsp.get_clients({ bufnr = 0 })[1], 0))
+
 local M = {}
 
 M.autoformat = true
