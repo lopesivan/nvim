@@ -53,3 +53,11 @@ nnoremenu Gen.makefile  :!echo % <Bar> sed.g_mk-m > Makefile<CR>
 vim.keymap.set("n", "<F12>", function()
   vim.fn.Menu2Quick("Gen", "n")
 end, { buffer = true, silent = true })
+
+-- 6. Null-ls (Formatador em segundo plano)
+local null_ls = require("null-ls")
+null_ls.setup({
+  sources = {
+    null_ls.builtins.formatting.astyle,
+  },
+})
