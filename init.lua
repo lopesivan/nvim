@@ -17,9 +17,13 @@ vim.lsp.enable("jdtls")
 vim.lsp.enable("kotlin_lsp")
 vim.lsp.enable("lemminx")
 vim.lsp.enable("clangd")
-vim.lsp.enable("html-lsp")
 vim.lsp.enable("glsl_analyzer")
 vim.lsp.enable("jsonls")
+-- vim.lsp.enable("html-lsp")
+vim.lsp.enable("html") -- era "html-lsp"
+vim.lsp.enable("pyright")
+vim.lsp.enable("ruff")
+
 -- vim.lsp.enable('tailwindcss')
 
 vim.fn.setenv("DAP_LOG_LEVEL", "TRACE")
