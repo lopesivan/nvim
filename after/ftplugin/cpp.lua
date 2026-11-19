@@ -54,10 +54,71 @@ vim.keymap.set("n", "<F12>", function()
   vim.fn.Menu2Quick("Gen", "n")
 end, { buffer = true, silent = true })
 
--- 6. Null-ls (Formatador em segundo plano)
-local null_ls = require("null-ls")
-null_ls.setup({
-  sources = {
-    null_ls.builtins.formatting.astyle,
-  },
-})
+-- 6. Extende os delimitadores do EasyAlign para C++
+vim.g.easy_align_delimiters =
+  vim.tbl_extend("force", vim.g.easy_align_delimiters or {}, {
+    ["d"] = {
+      pattern = "\\(const\\|constexpr\\|static\\)\\@<! ",
+      left_margin = 0,
+      right_margin = 0,
+    },
+    ["c"] = {
+      pattern = "\\/\\/",
+      ignore_groups = { "String" },
+      ignore_unmatched = 0,
+    },
+    ["<"] = {
+      pattern = "<<",
+      ignore_groups = { "String" },
+      ignore_unmatched = 0,
+    },
+    ["f"] = {
+      pattern = " \\ze\\S\\+\\s*[;=]",
+      left_margin = 0,
+      right_margin = 0,
+    },
+    ["]"] = {
+      pattern = "[[\\]]",
+      left_margin = 0,
+      right_margin = 0,
+      stick_to_left = 0,
+    },
+    [")"] = {
+      pattern = "[()]",
+      left_margin = 0,
+      right_margin = 0,
+      stick_to_left = 0,
+    },
+    ["("] = {
+      pattern = "(",
+      left_margin = 0,
+      right_margin = 0,
+      stick_to_left = 0,
+    },
+    ["w"] = {
+      pattern = "\\w",
+      left_margin = 0,
+      right_margin = 0,
+      stick_to_left = 0,
+    },
+    ["_"] = {
+      pattern = "_\\w",
+      left_margin = 1,
+      right_margin = 0,
+      stick_to_left = 0,
+    },
+    [","] = {
+      pattern = "\\w\\+,",
+      delimiter_align = "l",
+      left_margin = 0,
+      right_margin = 0,
+      stick_to_left = 0,
+    },
+    [";"] = {
+      pattern = "\\w\\+;",
+      delimiter_align = "l",
+      left_margin = 1,
+      right_margin = 0,
+      stick_to_left = 0,
+    },
+  })
