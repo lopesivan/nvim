@@ -120,6 +120,9 @@ vim.keymap.set("n", "<Leader>z", "<C-z>", { noremap = true, silent = true })
 --vim.keymap.set("t", "<esc><esc>", "<C-\\><C-n>", { silent = true })
 --vim.keymap.set("n", "<Leader>cm", "<C-l>", {})
 
+-- ----------------------------------------------------------------------------
+-- to executable: chmod +x
+
 vim.keymap.set("n", "<A-x>", function()
   local file = vim.api.nvim_buf_get_name(0)
   local stat = file ~= "" and vim.uv.fs_stat(file)
@@ -149,3 +152,52 @@ vim.keymap.set("n", "<A-x>", function()
     vim.notify("Falha no chmod: " .. tostring(err), vim.log.levels.ERROR)
   end
 end, { desc = "Alterna executável (chmod +x / -x)" })
+
+-- ----------------------------------------------------------------------------
+
+--[[
+Uso:
+
+<leader>cf → diretório do arquivo
+<leader>cp → raiz do projeto
+
+Se seu <leader> é espaço (vim.g.mapleader = " "):
+
+space + c + d + f
+space + c + d + p
+
+Esses comandos usam lcd, então o diretório muda só para a janela atual.
+]]
+-- Vai para o diretório do arquivo atual
+vim.keymap.set("n", "<leader>cdf", function()
+  vim.cmd("lcd %:p:h")
+  print("Diretório do arquivo atual")
+end, { desc = "CD para pasta do arquivo" })
+
+-- Vai para a raiz do projeto
+vim.keymap.set("n", "<leader>cdr", function()
+  local root = vim.fs.root(0, {
+    ".git",
+    "package.json",
+    "pyproject.toml",
+    "Cargo.toml",
+    "go.mod",
+  })
+
+  if root then
+    vim.cmd("lcd " .. root)
+    print("Projeto: " .. root)
+  else
+    print("Raiz do projeto não encontrada")
+  end
+end, { desc = "CD para raiz do projeto" })
+
+local filein = require("my.filein")
+
+vim.keymap.set("n", "]f", function()
+  filein.jump(vim.v.count1)
+end, { silent = true, desc = "Próximo arquivo do diretório" })
+
+vim.keymap.set("n", "[f", function()
+  filein.jump(-vim.v.count1)
+end, { silent = true, desc = "Arquivo anterior do diretório" })
