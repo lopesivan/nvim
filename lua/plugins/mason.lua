@@ -19,7 +19,7 @@ return {
     end,
   },
 
-  -- LSPs (nomes do lspconfig)
+  -- Servidores LSP
   {
     "mason-org/mason-lspconfig.nvim",
     event = "VeryLazy",
@@ -30,42 +30,58 @@ return {
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
-          "lua_ls",
+          "bashls",
           "clangd",
+          "glsl_analyzer",
           "jdtls",
+          "jsonls",
+          "lua_ls",
           "marksman",
           "pyright",
           "ruff",
-          "glsl_analyzer",
         },
+        automatic_enable = false,
       })
     end,
   },
 
-  -- Pacotes que não são LSP (DAP, formatters) + garantia de todos (nomes do Mason)
+  -- Formatadores, linters e depuradores
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     event = "VeryLazy",
-    cmd = { "MasonToolsInstall", "MasonToolsUpdate", "MasonToolsClean" },
-    dependencies = { "mason-org/mason.nvim" },
+    cmd = {
+      "MasonToolsInstall",
+      "MasonToolsUpdate",
+      "MasonToolsClean",
+    },
+    dependencies = {
+      "mason-org/mason.nvim",
+    },
     config = function()
       require("mason-tool-installer").setup({
         ensure_installed = {
-          "glsl_analyzer",
+          -- Python
           "autopep8",
-          "json-lsp",
-          "bash-debug-adapter",
           "black",
-          "clangd",
-          "codelldb",
+
+          -- Java
           "google-java-format",
-          "jdtls",
-          "lua-language-server",
-          "marksman",
+
+          -- JavaScript / JSON / HTML / CSS
           "prettier",
-          "pyright",
+
+          -- Shell
+          "shfmt",
+
+          -- XML
+          "xmlformatter",
+
+          -- Debuggers
+          "bash-debug-adapter",
+          "codelldb",
+
+          -- C# (registro personalizado)
           "roslyn-nightly",
-          "ruff",
         },
         auto_update = false,
         run_on_start = true,
