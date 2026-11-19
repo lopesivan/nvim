@@ -41,3 +41,24 @@ nmap({ "<leader><CR>", "run", "nvim_dev Run", "run with sh" })
 nmap({ "r<CR>", "yabs", "Run", "yabs Run" })
 -- nmap { "m<CR>", "make", "Make" }
 nmap({ "d<CR>", "dispatch", "Dispatch", "executar/encaminhar asinc bash" })
+
+--# NULL_LS
+
+-- Lê o valor numérico do option 'tabstop'
+local ts_num = vim.api.nvim_get_option_value("tabstop", {}) -- retorna, por exemplo, 4
+
+-- Converte para string
+local ts_str = tostring(ts_num)
+
+local null_ls = require("null-ls")
+
+null_ls.setup({
+  sources = {
+    -- mostra o valor da variável de ambiente, exemplo: PWD -  cursor
+    -- sobre $PWD e pressiono `K'
+    null_ls.builtins.hover.printenv,
+    null_ls.builtins.formatting.shfmt.with({
+      extra_args = { "-i", ts_str, "-ci" },
+    }),
+  },
+})
