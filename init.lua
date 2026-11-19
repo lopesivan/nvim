@@ -25,6 +25,5 @@ vim.lsp.enable("jsonls")
 vim.fn.setenv("DAP_LOG_LEVEL", "TRACE")
 vim.fn.setenv("DAP_LOG_FILE", vim.fn.stdpath("cache") .. "/dap.log")
 
-require("my.format")
 -- vim.g.loaded_netrw = 1
 -- vim.g.loaded_netrwPlugin = 1
