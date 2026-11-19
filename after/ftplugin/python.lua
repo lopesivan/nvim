@@ -28,7 +28,6 @@ vim.g.projectionist_heuristics = {
       ["start"] = "ipython -i {file}",
       ["make"] = "python {file}",
       ["run"] = "lua require('my.neovim_dev').app('python',{'{file}'})",
-      ["pythonlog"] = "lua require('my.neovim_dev').applog('python', {'{file}'}, '{}.log')",
       ["type"] = "python",
     },
   },
@@ -45,7 +44,14 @@ dispatch_nmap(
   { "<leader><CR>", "run", "nvim_dev Run", "nvim_dev Run" },
   { buffer = bufnr }
 )
-dispatch_nmap(
-  { "<leader><leader>l", "pythonlog", "python log", "python log" },
-  { buffer = bufnr }
-)
+
+local null_ls = require("null-ls")
+
+null_ls.setup({
+  sources = {
+    -- null_ls.builtins.formatting.black,
+    null_ls.builtins.formatting.autopep8,
+    -- null_ls.builtins.completion.luasnip,
+    -- null_ls.builtins.completion.tags,
+  },
+})
