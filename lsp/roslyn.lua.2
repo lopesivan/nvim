@@ -1,0 +1,46 @@
+-- ~/.config/nvim/lua/lsp/roslyn.lua
+
+-- ROSLYN (+razor support)
+local roslyn_root = vim.fn.expand("~/.dotnet/roslyn/content/LanguageServer/linux-x64")
+local rzls_path = vim.fn.expand("~/.dotnet/roslyn/content/LanguageServer/linux-x64/.razorExtension")
+
+-- Criar diretório para extensões Razor se não existir
+vim.fn.mkdir(rzls_path, "p")
+
+vim.lsp.config("roslyn", {
+  cmd = {
+    vim.fs.joinpath(roslyn_root, "Microsoft.CodeAnalysis.LanguageServer"),
+    "--stdio",
+    "--logLevel=Information",
+    "--extensionLogDirectory=" .. vim.fs.dirname(vim.lsp.get_log_path()),
+  },
+  filetypes = { "cs" },
+  root_markers = { "*.csproj", "*.sln" },
+})
+
+-- Habilitar para arquivos C#
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "cs",
+  callback = function()
+    vim.lsp.enable("roslyn")
+  end,
+})
+
+-- Keymaps quando o LSP anexar
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client and client.name == "roslyn" then
+      local opts = { buffer = args.buf, noremap = true, silent = true }
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+      vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+      vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+      vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+      vim.keymap.set("n", "<leader>f", function()
+        vim.lsp.buf.format({ async = true })
+      end, opts)
+    end
+  end,
+})
