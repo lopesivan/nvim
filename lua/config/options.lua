@@ -1,42 +1,44 @@
-local opt = vim.opt
 -- vim.opt.background = "light"
 -- search is slow when true
-opt.hlsearch = true
-opt.expandtab = true
-opt.shiftwidth = 2
+vim.opt.hlsearch = true
 
-opt.cursorline = true
-opt.cursorcolumn = true
-opt.cursorlineopt = "both" -- line + number: "both" | "line" | "number"
+vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
+vim.opt.cursorlineopt = "both" -- line + number: "both" | "line" | "number"
 
-opt.wrap = true
-opt.tabstop = 4
-opt.shiftwidth = 4
-opt.softtabstop = 4
-opt.textwidth = 78
-opt.breakindent = true
-opt.showbreak = string.rep(" ", 3) -- Make it so that long lines wrap smartly
-opt.linebreak = true
-opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+local indent = 4
+vim.opt.shiftwidth = indent
+vim.opt.tabstop = indent
+vim.opt.softtabstop = indent
+vim.opt.expandtab = true
+require("my.format").setup()
+
+vim.opt.wrap = true
+vim.opt.textwidth = 78
+
+vim.opt.breakindent = true
+vim.opt.showbreak = string.rep(" ", 3) -- Make it so that long lines wrap smartly
+vim.opt.linebreak = true
+vim.opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
 --opt.autocomplete = true
 
-opt.pumheight = 10
+vim.opt.pumheight = 10
 vim.wo.number = true
-opt.relativenumber = true
-opt.termguicolors = true
-opt.ignorecase = true
-opt.smartcase = true
+vim.opt.relativenumber = true
+vim.opt.termguicolors = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 -- vim.o.winborder = 'rounded'
 -- opt.cursorline = true
 -- opt.colorcolumn=90
 
-opt.colorcolumn = "79"
+vim.opt.colorcolumn = "79"
 
-opt.fillchars = { fold = " " }
-opt.foldmethod = "indent"
-opt.foldenable = false
-opt.foldlevel = 99
+vim.opt.fillchars = { fold = " " }
+vim.opt.foldmethod = "indent"
+vim.opt.foldenable = false
+vim.opt.foldlevel = 99
 
 -- Enable diagnostics
 vim.diagnostic.config({
@@ -67,21 +69,21 @@ end
 vim.opt.shortmess:append({ I = true, c = false, F = false })
 
 -- Ignore compiled files
-opt.wildignore = "__pycache__"
-opt.wildignore:append({ "*.o", "*~", "*.pyc", "*pycache*" })
-opt.wildignore:append("Cargo.lock")
-opt.wildignore:append("**/node_modules/*")
-opt.wildignore:append("**/.git/*")
+vim.opt.wildignore = "__pycache__"
+vim.opt.wildignore:append({ "*.o", "*~", "*.pyc", "*pycache*" })
+vim.opt.wildignore:append("Cargo.lock")
+vim.opt.wildignore:append("**/node_modules/*")
+vim.opt.wildignore:append("**/.git/*")
 
-opt.path:remove("/usr/include")
-opt.path:append("**")
-opt.whichwrap:append("<>[]hl")
-opt.shortmess:append("sI")
+vim.opt.path:remove("/usr/include")
+vim.opt.path:append("**")
+vim.opt.whichwrap:append("<>[]hl")
+vim.opt.shortmess:append("sI")
 
 -- NOTE: tenho a opção com e sem brew
 local shell =
   string.format("bash --rcfile %s/bashrc", vim.fn.stdpath("config"))
-opt.shell = shell
+vim.opt.shell = shell
 
 -- local ui2 = require("vim._core.ui2")
 -- ui2.enable({
@@ -125,10 +127,10 @@ local disabled_built_ins = {
   "getscriptPlugin",
   "gzip",
   "logipat",
-  -- "netrw",
-  -- "netrwPlugin",
-  -- "netrwSettings",
-  -- "netrwFileHandlers",
+  "netrw",
+  "netrwPlugin",
+  "netrwSettings",
+  "netrwFileHandlers",
   "matchit",
   "matchparen",
   "tar",
