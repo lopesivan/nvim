@@ -1,0 +1,47 @@
+local h = require("null-ls.helpers")
+local methods = require("null-ls.methods")
+
+local FORMATTING = methods.internal.FORMATTING
+
+-- arquivos de configuração aceitos
+local config_files = { ".astylerc", "astyle.cfg" }
+
+-- devolve o primeiro arquivo de config encontrado ou nil
+local function find_astyle_cfg(utils)
+    for _, fname in ipairs(config_files) do
+        if utils.root_has_file(fname) then
+            return fname
+        end
+    end
+    return nil
+end
+
+return h.make_builtin({
+    name = "astyle",
+    meta = {
+        url = "http://astyle.sourceforge.net/",
+        description = [[Artistic Style é um formatador/indentador para C, C++, C# e Java.]],
+    },
+    method = FORMATTING,
+    filetypes = { "arduino", "c", "cpp", "cs", "java" },
+    generator_opts = {
+        command = "astyle",
+        args = function()
+            local utils = require("null-ls.utils").make_conditional_utils()
+            local cfg = find_astyle_cfg(utils)
+
+            local args = { "--quiet" }
+            if cfg then
+                table.insert(args, 1, string.format("--options=%s", cfg))
+            else
+                vim.notify(
+                    "[astyle] Arquivo de configuração (.astylerc ou astyle.cfg) não encontrado",
+                    vim.log.levels.ERROR
+                )
+            end
+            return args
+        end,
+        to_stdin = true,
+    },
+    factory = h.formatter_factory,
+})
