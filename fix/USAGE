@@ -1,0 +1,5 @@
+make clean mkdirs
+
+abre o vim
+
+make copy
