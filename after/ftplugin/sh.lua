@@ -20,17 +20,6 @@ set.foldtext = "getline(v:foldstart)"
 vim.b["surround_" .. vim.fn.char2nr("p")] = "${\r}"
 vim.fn.setreg("a", "veSp")
 
---# Map
-vim.keymap.set("n", "<leader>xe", function()
-  local file = vim.fn.expand("%:p") -- Caminho completo do arquivo atual
-  if vim.fn.filereadable(file) == 1 then
-    vim.fn.system({ "chmod", "+x", file })
-    print("Arquivo tornou-se executável: " .. file)
-  else
-    print("Arquivo não encontrado ou não legível.")
-  end
-end, { desc = "Tornar arquivo executável com chmod +x" })
-
 --# Setup projectionist
 vim.g.projectionist_heuristics = {
   ["*.sh"] = {
